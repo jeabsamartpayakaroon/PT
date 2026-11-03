@@ -637,6 +637,19 @@
     return h * 60 + parseInt(m[2], 10);
   }
 
+  // "Now" in Melbourne (where the sessions are), so times that have already passed there are never offered.
+  function melbNow(){
+    try {
+      var parts = {};
+      new Intl.DateTimeFormat("en-AU", { timeZone: "Australia/Melbourne", year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric", hour12: false })
+        .formatToParts(new Date()).forEach(function(p){ parts[p.type] = p.value; });
+      return { date: new Date(+parts.year, +parts.month - 1, +parts.day), min: (+parts.hour % 24) * 60 + (+parts.minute) };
+    } catch (e) {
+      var n = new Date();
+      return { date: new Date(n.getFullYear(), n.getMonth(), n.getDate()), min: n.getHours() * 60 + n.getMinutes() };
+    }
+  }
+
   function buildDaySlots(duration){
     var slots = [];
     for (var s = DAY_START_MIN; s + duration <= LAST_END_MIN; s += SLOT_STEP){
@@ -685,7 +698,12 @@
 
   function slotsForDate(d){
     if (d.getDay() === 0) return []; // Sunday closed
-    return buildDaySlots(state.duration);
+    var slots = buildDaySlots(state.duration);
+    var now = melbNow();
+    if (isoDateStr(d) === isoDateStr(now.date)){
+      slots = slots.filter(function(t){ return parseTimeLabel(t) > now.min; }); // drop times that have passed
+    }
+    return slots;
   }
 
   function priceInfo(){
@@ -753,7 +771,7 @@
   var calLabel = document.getElementById("calLabel");
 
   function renderCalendar(){
-    var today = new Date(); today.setHours(0,0,0,0);
+    var today = melbNow().date;
     var viewYear = today.getFullYear();
     var viewMonth = today.getMonth() + state.monthOffset;
 
@@ -816,7 +834,9 @@
     }
     var slots = slotsForDate(state.date);
     if (!slots.length){
-      timeChips.innerHTML = '<span class="price-note">Closed this day — pick another date.</span>';
+      timeChips.innerHTML = state.date.getDay() === 0
+        ? '<span class="price-note">Closed this day — pick another date.</span>'
+        : '<span class="price-note">No more times available today — pick another date.</span>';
       return;
     }
     var dKey = isoDateStr(state.date);
@@ -915,6 +935,14 @@
     }
     if (phone.replace(/\D/g, "").length < 8){
       showModal(false, "Phone number needed", "Please add a valid phone number so Kru Jeab can contact you if needed.");
+      return;
+    }
+
+    if (state.time && isoDateStr(state.date) === isoDateStr(melbNow().date) && parseTimeLabel(state.time) <= melbNow().min){
+      state.time = null;
+      renderTimeSlots();
+      updateSummary();
+      showModal(false, "That time has passed", "Please choose a later time.");
       return;
     }
 
@@ -1029,6 +1057,7 @@
 
   renderCalendar();
   renderTimeSlots();
+  setInterval(function(){ if (state.date){ renderCalendar(); renderTimeSlots(); updateSummary(); } }, 60000); // keep the list current as time passes
   renumberSteps();
   updateSummary();
   fetchBookedSlots();
