@@ -130,7 +130,7 @@
   }
   .photo-credit a{color:var(--accent); text-decoration:underline; text-underline-offset:2px;}
   figure.bio-photo{margin:28px 0 0;}
-  figure.bio-photo img{width:100%; border-radius:4px; border:1px solid var(--line); display:block;}
+  figure.bio-photo img{width:100%; height:auto; border-radius:4px; border:1px solid var(--line); display:block;}
   figure.bio-photo figcaption{font-family:var(--font-mono); font-size:0.68rem; color:var(--ink-soft); margin-top:8px; letter-spacing:0.04em;}
   figure.bio-photo figcaption a{color:var(--accent); text-decoration:underline; text-underline-offset:2px;}
 
@@ -423,28 +423,20 @@
     </div>
     <div class="gallery-grid">
       <figure class="gallery-item">
-        <button type="button" class="gallery-open" data-full="images/gallery-fight.jpg" data-caption="Fight night" aria-label="Enlarge photo: Fight night"><img src="images/gallery-fight.jpg" alt="Fight night" width="1120" height="746" loading="lazy"></button>
-        <figcaption>Fight night<span class="gallery-credit">Photo: <a href="https://williamluu.com.au" target="_blank" rel="noopener">W.L Fight Photography</a></span></figcaption>
+        <button type="button" class="gallery-open" data-full="images/gallery-fight.jpg" aria-label="Enlarge photo: Fight night"><img src="images/gallery-fight.jpg" alt="Fight night" width="1120" height="746" loading="lazy"></button>
+        <figcaption><span class="gallery-credit">Photo: <a href="https://williamluu.com.au" target="_blank" rel="noopener">W.L Fight Photography</a></span></figcaption>
       </figure>
       <figure class="gallery-item">
-        <button type="button" class="gallery-open" data-full="images/gallery-stance.jpg" data-caption="Muay Thai stance" aria-label="Enlarge photo: Muay Thai stance"><img src="images/gallery-stance.jpg" alt="Muay Thai stance" width="927" height="1400" loading="lazy"></button>
-        <figcaption>Muay Thai stance</figcaption>
+        <button type="button" class="gallery-open" data-full="images/gallery-stance.jpg" aria-label="Enlarge photo: Muay Thai stance"><img src="images/gallery-stance.jpg" alt="Muay Thai stance" width="927" height="1400" loading="lazy"></button>
       </figure>
       <figure class="gallery-item">
-        <button type="button" class="gallery-open" data-full="images/gallery-academy.jpg" data-caption="Muay Thai Academy" aria-label="Enlarge photo: Muay Thai Academy"><img src="images/gallery-academy.jpg" alt="Muay Thai Academy" width="966" height="1294" loading="lazy"></button>
-        <figcaption>Muay Thai Academy</figcaption>
+        <button type="button" class="gallery-open" data-full="images/gallery-academy.jpg" aria-label="Enlarge photo: Muay Thai Academy"><img src="images/gallery-academy.jpg" alt="Muay Thai Academy" width="966" height="1294" loading="lazy"></button>
       </figure>
       <figure class="gallery-item">
-        <button type="button" class="gallery-open" data-full="images/gallery-team.jpg" data-caption="Team photo" aria-label="Enlarge photo: Team photo"><img src="images/gallery-team.jpg" alt="Team photo" width="882" height="1556" loading="lazy"></button>
-        <figcaption>Team photo</figcaption>
+        <button type="button" class="gallery-open" data-full="images/gallery-temple.jpg" aria-label="Enlarge photo: The tradition"><img src="images/gallery-temple.jpg" alt="The tradition" width="1056" height="1400" loading="lazy"></button>
       </figure>
       <figure class="gallery-item">
-        <button type="button" class="gallery-open" data-full="images/gallery-temple.jpg" data-caption="The tradition" aria-label="Enlarge photo: The tradition"><img src="images/gallery-temple.jpg" alt="The tradition" width="1056" height="1400" loading="lazy"></button>
-        <figcaption>The tradition</figcaption>
-      </figure>
-      <figure class="gallery-item">
-        <button type="button" class="gallery-open" data-full="images/gallery-golden-hour.jpg" data-caption="Brothers of the Golden Hour" aria-label="Enlarge photo: Brothers of the Golden Hour"><img src="images/gallery-golden-hour.jpg" alt="Brothers of the Golden Hour" width="933" height="1400" loading="lazy"></button>
-        <figcaption>Brothers of the Golden Hour</figcaption>
+        <button type="button" class="gallery-open" data-full="images/gallery-golden-hour.jpg" aria-label="Enlarge photo: Brothers of the Golden Hour"><img src="images/gallery-golden-hour.jpg" alt="Brothers of the Golden Hour" width="933" height="1400" loading="lazy"></button>
       </figure>
     </div>
   </div>
@@ -1012,8 +1004,10 @@
     function open(btn){
       opener = btn;
       img.src = btn.getAttribute("data-full");
-      img.alt = btn.getAttribute("data-caption") || "";
+      var thumb = btn.querySelector("img");
+      img.alt = thumb ? thumb.alt : "";
       cap.textContent = btn.getAttribute("data-caption") || "";
+      cap.style.display = cap.textContent ? "" : "none";
       box.classList.add("show");
       closeBtn.focus();
     }
