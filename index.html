@@ -322,6 +322,16 @@
     .field-row{grid-template-columns:1fr;}
     .nav ul{gap:14px;}
   }
+
+  /* ---------- RESULT POP-UP ---------- */
+  .modal{position:fixed; inset:0; z-index:100; display:none; align-items:center; justify-content:center; padding:20px; background:rgba(0,0,0,0.72);}
+  .modal.show{display:flex;}
+  .modal-card{background:var(--surface); border:1px solid var(--line); border-top:4px solid var(--oxblood); border-radius:4px; max-width:440px; width:100%; padding:30px 26px 26px; text-align:center;}
+  .modal-icon{width:56px; height:56px; border-radius:50%; margin:0 auto 16px; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:2rem; font-weight:800; color:#fff;}
+  .modal-icon.ok{background:#1f9d55;}
+  .modal-icon.bad{background:#c62828;}
+  .modal-card h3{font-size:1.5rem; margin-bottom:10px;}
+  .modal-card p{margin:0 0 22px; color:var(--ink-soft);}
 </style>
 
 <header class="site">
@@ -476,7 +486,7 @@
 
         <div class="step-label"><b id="timeStepNum">04</b> Time</div>
         <div class="chip-row" id="timeChips"></div>
-        <p class="price-note" style="margin-top:-10px;">One-hour blocks, 6am–5pm, outside the reserved windows above. Exact time confirmed when Kru Jeab accepts your request.</p>
+        <p class="price-note" style="margin-top:-10px;">Start times every 30 minutes between 6am and 6pm, outside the reserved windows above. Your session must finish by 6pm. Kru Jeab confirms your slot by email.</p>
 
         <div class="step-label"><b id="detailStepNum">05</b> Your details</div>
         <div class="field-row">
@@ -495,27 +505,9 @@
           <div class="price-line"><span>Date &amp; time</span><span class="v" id="sumWhen">Not selected</span></div>
           <div class="price-line"><span>Rate</span><span class="v" id="sumRate">—</span></div>
           <div class="price-line total"><span>Total</span><span class="v" id="sumTotal">—</span></div>
-          <div class="price-line deposit"><span>Deposit due now (20%)</span><span class="v" id="sumDeposit">—</span></div>
-          <div class="price-line"><span>Balance at session</span><span class="v" id="sumBalance">—</span></div>
-          <p class="price-note">Group rate is charged per person. A 20% deposit secures your slot; the balance is paid at the session.</p>
+          <p class="price-note">Group rate is charged per person. Kru Jeab will confirm your session by email.</p>
           <button class="btn btn-primary" id="requestBtn" type="button" style="width:100%; justify-content:center;" disabled>Request this session</button>
 
-          <div class="confirm-card" id="confirmCard">
-            <h4>Request ready — ref #<span id="refCode"></span></h4>
-            <dl id="confirmDl"></dl>
-            <div class="pay-box">
-              20% deposit: <span id="payDepositAmt"></span><br>
-              PayID: <span class="ph">[add your PayID — mobile or email]</span><br>
-              Bank transfer — BSB: <span class="ph">[add BSB]</span> Acc: <span class="ph">[add account no.]</span><br>
-              Account name: Jeab Samart Payakaroon<br>
-              Reference: <span id="payRef"></span>
-            </div>
-            <p class="price-note" id="submitStatus" style="margin-bottom:0;">Sending your request to Kru Jeab…</p>
-            <div class="confirm-actions">
-              <a class="btn btn-primary" id="emailReqBtn" href="#" target="_blank" rel="noopener">Email this request instead</a>
-              <a class="btn btn-ghost" href="https://www.instagram.com/theringgym" target="_blank" rel="noopener">Message via Instagram</a>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -570,7 +562,6 @@
         <h3>Direct</h3>
         <ul class="contact-list">
           <li><span>Email</span><a href="mailto:jeabsamartpayakaroon@gmail.com">jeabsamartpayakaroon@gmail.com</a></li>
-          <li><span>Phone</span><span class="ph">[add your phone]</span></li>
         </ul>
         <div class="gym-ref">
           <strong>The Ring Gym</strong> — training venue details below:<br>
@@ -602,6 +593,15 @@
   </div>
 </footer>
 
+<div class="modal" id="resultModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <div class="modal-icon ok" id="modalIcon" aria-hidden="true">&#10003;</div>
+    <h3 id="modalTitle"></h3>
+    <p id="modalMsg"></p>
+    <button class="btn btn-primary" id="modalClose" type="button">OK</button>
+  </div>
+</div>
+
 <script>
 (function(){
   "use strict";
@@ -615,32 +615,42 @@
     60: { private: 120, group: {2:85, 3:70, 4:60, 5:54, 6:48} }
   };
 
-  // Hourly blocks 6am–5pm, Mon–Sat, minus the reserved windows
-  // (9:30–11:30am and 6:00–7:30pm) and minus Sunday entirely.
-  var DAY_START_HOUR = 6;
-  var DAY_END_HOUR = 17; // last start time, 5pm
-  var BLOCKED_RANGES = [[9.5, 11.5], [18, 19.5]];
+  // Start times every 30 minutes from 6:00am. A start time is only offered when the
+  // whole session (for the chosen duration) fits: it must finish by 6:00pm and must not
+  // overlap the reserved windows (9:30-11:30am and 6:00-7:30pm). Sundays are closed.
+  var DAY_START_MIN = 6 * 60;
+  var LAST_END_MIN = 18 * 60;
+  var SLOT_STEP = 30;
+  var BLOCKED_RANGES = [[9.5 * 60, 11.5 * 60], [18 * 60, 19.5 * 60]];
 
   var DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
   var MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
-  function formatHour(h){
-    var period = h < 12 || h === 24 ? "AM" : "PM";
+  function formatMinutes(m){
+    var h = Math.floor(m / 60), mi = m % 60;
+    var period = h < 12 ? "AM" : "PM";
     var h12 = h % 12;
     if (h12 === 0) h12 = 12;
-    return h12 + ":00 " + period;
+    return h12 + ":" + (mi < 10 ? "0" : "") + mi + " " + period;
   }
 
-  function buildDaySlots(){
+  function parseTimeLabel(t){
+    var m = /^(\d{1,2}):(\d{2}) (AM|PM)$/.exec(String(t).trim());
+    if (!m) return null;
+    var h = parseInt(m[1], 10) % 12;
+    if (m[3] === "PM") h += 12;
+    return h * 60 + parseInt(m[2], 10);
+  }
+
+  function buildDaySlots(duration){
     var slots = [];
-    for (var h = DAY_START_HOUR; h <= DAY_END_HOUR; h++){
-      var slotStart = h, slotEnd = h + 1;
-      var blocked = BLOCKED_RANGES.some(function(b){ return slotStart < b[1] && slotEnd > b[0]; });
-      if (!blocked) slots.push(formatHour(h));
+    for (var s = DAY_START_MIN; s + duration <= LAST_END_MIN; s += SLOT_STEP){
+      var e = s + duration;
+      var blocked = BLOCKED_RANGES.some(function(b){ return s < b[1] && e > b[0]; });
+      if (!blocked) slots.push(formatMinutes(s));
     }
     return slots;
   }
-  var DAY_SLOTS = buildDaySlots();
 
   var state = {
     type: "private",
@@ -657,23 +667,30 @@
     return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
   }
 
-  // Slots Kru Jeab has already confirmed, loaded from the booking sheet
-  // so the calendar can grey them out for everyone else. Keyed
-  // "YYYY-MM-DD|H:MM AM/PM" to match isoDateStr() + formatHour() output.
-  var bookedSlots = new Set();
+  // Sessions Kru Jeab has already confirmed, loaded from the booking sheet so the
+  // calendar can grey out any start time that would overlap them.
+  var bookedSlots = []; // {date:"YYYY-MM-DD", start:minutes, dur:minutes}
   function fetchBookedSlots(){
     fetch(BOOKING_WEBHOOK_URL, { method: "GET" })
       .then(function(res){ return res.ok ? res.json() : Promise.reject(new Error("bad status")); })
       .then(function(data){
-        (data.bookedSlots || []).forEach(function(s){ bookedSlots.add(s.date + "|" + s.time); });
+        bookedSlots = (data.bookedSlots || []).map(function(b){
+          return { date: b.date, start: parseTimeLabel(b.time), dur: parseInt(b.duration, 10) || 60 };
+        }).filter(function(b){ return b.start !== null; });
         if (state.date) renderTimeSlots();
       })
-      .catch(function(){ /* fail open — if this can't be reached, slots just show unblocked */ });
+      .catch(function(){ /* fail open: if this can't be reached, slots just show unblocked */ });
+  }
+
+  function isTaken(dateKey, startMin, dur){
+    return bookedSlots.some(function(b){
+      return b.date === dateKey && startMin < b.start + b.dur && b.start < startMin + dur;
+    });
   }
 
   function slotsForDate(d){
     if (d.getDay() === 0) return []; // Sunday closed
-    return DAY_SLOTS;
+    return buildDaySlots(state.duration);
   }
 
   function priceInfo(){
@@ -805,11 +822,18 @@
       return;
     }
     var dKey = isoDateStr(state.date);
+    if (state.time){
+      var curStart = parseTimeLabel(state.time);
+      if (slots.indexOf(state.time) === -1 || isTaken(dKey, curStart, state.duration)){
+        state.time = null;
+        updateSummary();
+      }
+    }
     slots.forEach(function(t){
       var btn = document.createElement("button");
       btn.className = "chip";
       btn.type = "button";
-      var taken = bookedSlots.has(dKey + "|" + t);
+      var taken = isTaken(dKey, parseTimeLabel(t), state.duration);
       btn.textContent = taken ? t + " · Booked" : t;
       btn.setAttribute("aria-pressed", state.time === t ? "true" : "false");
       if (taken){
@@ -831,8 +855,6 @@
   var sumWhen = document.getElementById("sumWhen");
   var sumRate = document.getElementById("sumRate");
   var sumTotal = document.getElementById("sumTotal");
-  var sumDeposit = document.getElementById("sumDeposit");
-  var sumBalance = document.getElementById("sumBalance");
   var requestBtn = document.getElementById("requestBtn");
 
   function updateSummary(){
@@ -845,79 +867,62 @@
     }
     sumRate.textContent = state.type === "group" ? fmt(info.perPerson) + " / person" : fmt(info.perPerson);
     sumTotal.textContent = fmt(info.total);
-    var deposit = Math.round(info.total * 0.2);
-    sumDeposit.textContent = fmt(deposit);
-    sumBalance.textContent = fmt(info.total - deposit);
 
     var ready = !!(state.date && state.time);
     requestBtn.disabled = !ready;
   }
 
   // ---- request / confirm ----
-  var confirmCard = document.getElementById("confirmCard");
+  var modal = document.getElementById("resultModal");
+  var modalTitle = document.getElementById("modalTitle");
+  var modalMsg = document.getElementById("modalMsg");
+  var modalClose = document.getElementById("modalClose");
+  var modalIcon = document.getElementById("modalIcon");
+  var lastFocus = null;
+
+  function showModal(ok, title, msg){
+    modalIcon.textContent = ok ? "\u2713" : "!";
+    modalIcon.className = "modal-icon " + (ok ? "ok" : "bad");
+    modalTitle.textContent = title;
+    modalMsg.textContent = msg;
+    lastFocus = document.activeElement;
+    modal.classList.add("show");
+    modalClose.focus();
+  }
+  function hideModal(){
+    modal.classList.remove("show");
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  modalClose.addEventListener("click", hideModal);
+  modal.addEventListener("click", function(e){ if (e.target === modal) hideModal(); });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape" && modal.classList.contains("show")) hideModal();
+  });
+
+  var sending = false;
   requestBtn.addEventListener("click", function(){
+    if (sending) return;
     var name = document.getElementById("fName").value.trim();
     var email = document.getElementById("fEmail").value.trim();
     var phone = document.getElementById("fPhone").value.trim();
     var notes = document.getElementById("fNotes").value.trim();
 
     if (!name){
-      alert("Please add your name so Kru Jeab can confirm your slot.");
-      document.getElementById("fName").focus();
+      showModal(false, "Name needed", "Please add your name so Kru Jeab can confirm your slot.");
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-      alert("Please add a valid email address — it's required so Kru Jeab can confirm your slot.");
-      document.getElementById("fEmail").focus();
+      showModal(false, "Email needed", "Please add a valid email address. Kru Jeab will email you to confirm your slot.");
       return;
     }
     if (phone.replace(/\D/g, "").length < 8){
-      alert("Please add a valid phone number — it's required so Kru Jeab can contact you to confirm your slot.");
-      document.getElementById("fPhone").focus();
+      showModal(false, "Phone number needed", "Please add a valid phone number so Kru Jeab can contact you if needed.");
       return;
     }
 
     var info = priceInfo();
-    var deposit = Math.round(info.total * 0.2);
     var whenStr = DOW[state.date.getDay()] + " " + MONTHS[state.date.getMonth()].slice(0,3) + " " + state.date.getDate() + ", " + state.time;
-    var ref = "JS-" + String(state.date.getMonth()+1).padStart(2,"0") + String(state.date.getDate()).padStart(2,"0") + "-" + Math.random().toString(36).slice(2,5).toUpperCase();
-
-    document.getElementById("refCode").textContent = ref;
-    document.getElementById("payDepositAmt").textContent = fmt(deposit);
-    document.getElementById("payRef").textContent = ref;
-
-    var dl = document.getElementById("confirmDl");
-    dl.innerHTML =
-      "<dt>Name</dt><dd>" + name + "</dd>" +
-      "<dt>Format</dt><dd>" + info.label + "</dd>" +
-      "<dt>When</dt><dd>" + whenStr + "</dd>" +
-      "<dt>Total</dt><dd>" + fmt(info.total) + "</dd>" +
-      (notes ? "<dt>Notes</dt><dd>" + notes + "</dd>" : "");
-
-    var bodyLines = [
-      "New session request — ref " + ref,
-      "",
-      "Name: " + name,
-      "Phone: " + (phone || "-"),
-      "Email: " + (email || "-"),
-      "Format: " + info.label,
-      "Requested date/time: " + whenStr,
-      "Total: " + fmt(info.total) + " (deposit " + fmt(deposit) + ")",
-      notes ? "Notes: " + notes : ""
-    ].filter(Boolean).join("\n");
-
-    var mailHref = "mailto:" + NOTIFY_EMAIL + "?subject=" + encodeURIComponent("New session request " + ref) + "&body=" + encodeURIComponent(bodyLines);
-    var mailBtn = document.getElementById("emailReqBtn");
-    mailBtn.href = mailHref;
-
-    confirmCard.classList.add("show");
-    confirmCard.scrollIntoView({behavior:"smooth", block:"nearest"});
-
-    // Send the request straight to Kru Jeab's booking sheet + email
-    // notification. No redirect needed — this happens quietly in the
-    // background while the confirmation card is already showing.
-    var statusEl = document.getElementById("submitStatus");
-    var isoDate = state.date.getFullYear() + "-" + String(state.date.getMonth()+1).padStart(2,"0") + "-" + String(state.date.getDate()).padStart(2,"0");
+    var firstName = name.split(/\s+/)[0];
     var payload = new URLSearchParams({
       name: name,
       email: email,
@@ -925,19 +930,32 @@
       sessionType: state.type,
       groupSize: state.type === "group" ? String(state.groupSize) : "1",
       duration: String(state.duration),
-      date: isoDate,
+      date: isoDateStr(state.date),
       time: state.time,
       notes: notes,
       price: String(info.total)
     });
 
+    sending = true;
+    requestBtn.disabled = true;
+    requestBtn.textContent = "Sending\u2026";
+
     fetch(BOOKING_WEBHOOK_URL, { method: "POST", body: payload })
       .then(function(res){ return res.ok ? res.json() : Promise.reject(new Error("bad status")); })
-      .then(function(){
-        statusEl.textContent = "Request sent — Kru Jeab has been notified and will confirm your slot shortly.";
+      .then(function(data){
+        if (!data || data.result !== "success") throw new Error("not accepted");
+        showModal(true, "Request sent!", "Thanks " + firstName + ". Kru Jeab has your request for " + whenStr + " and will confirm it by email shortly.");
+        ["fName","fPhone","fEmail","fNotes"].forEach(function(id){ document.getElementById(id).value = ""; });
+        state.time = null;
+        renderTimeSlots();
       })
       .catch(function(){
-        statusEl.textContent = "Couldn't reach the booking system — please use the button below to email your request directly instead.";
+        showModal(false, "Couldn't send your request", "Something went wrong reaching the booking system. Please try again in a moment, or email Kru Jeab directly at " + NOTIFY_EMAIL + ".");
+      })
+      .then(function(){
+        sending = false;
+        requestBtn.textContent = "Request this session";
+        updateSummary();
       });
   });
 
