@@ -309,6 +309,14 @@
   .gym-ref{margin-top:18px; padding-top:18px; border-top:1px solid var(--line); font-size:0.86rem; color:var(--ink-soft);}
   .gym-ref a{color:var(--oxblood); text-decoration:underline; text-underline-offset:2px;}
 
+  .contact-grid{align-items:start;}
+  .contact-card{text-align:left;}
+  .gym-logo{display:block; width:100%; max-width:280px; height:auto; border-radius:3px; margin-bottom:20px;}
+  .gym-card .contact-list li{display:grid; grid-template-columns:96px 1fr; justify-content:start; gap:12px; text-align:left;}
+  .gym-card .contact-list a{word-break:break-word;}
+  .gym-card .gym-ref{border-top:0; padding-top:0; margin-top:18px;}
+  .hp-field{position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;}
+
   form.contact-form .field{margin-bottom:14px;}
   .form-note{font-size:0.78rem; color:var(--ink-soft); margin-top:10px;}
 
@@ -559,29 +567,28 @@
     </div>
     <div class="contact-grid">
       <div class="contact-card">
-        <h3>Direct</h3>
-        <ul class="contact-list">
-          <li><span>Email</span><a href="mailto:jeabsamartpayakaroon@gmail.com">jeabsamartpayakaroon@gmail.com</a></li>
-        </ul>
-        <div class="gym-ref">
-          <strong>The Ring Gym</strong> — training venue details below:<br>
-          83 Cranwell Street, Braybrook VIC 3019 ·
-          <a href="tel:0438797477">0438 797 477</a> ·
-          <a href="https://www.instagram.com/theringgym" target="_blank" rel="noopener">Instagram</a> ·
-          <a href="https://www.facebook.com/theringgym/" target="_blank" rel="noopener">Facebook</a> ·
-          <a href="https://www.theringgym.com.au/" target="_blank" rel="noopener">theringgym.com.au</a>
-        </div>
-      </div>
-      <div class="contact-card">
         <h3>Send a message</h3>
-        <form class="contact-form" id="contactForm">
-          <div class="field"><label for="cName">Name</label><input id="cName" type="text" required></div>
-          <div class="field"><label for="cEmail">Email</label><input id="cEmail" type="email" required></div>
+        <form class="contact-form" id="contactForm" novalidate>
+          <div class="field"><label for="cName">Name</label><input id="cName" type="text" autocomplete="name" required></div>
+          <div class="field"><label for="cEmail">Email</label><input id="cEmail" type="email" autocomplete="email" required></div>
           <div class="field"><label for="cMsg">Message</label><textarea id="cMsg" required placeholder="Ask about training, fight prep, or anything else"></textarea></div>
-          <button class="btn btn-primary" type="submit">Send message</button>
-          <p class="form-note">Opens your email app with this message ready to send.</p>
+          <div class="hp-field" aria-hidden="true"><label for="cWebsite">Leave this field empty</label><input id="cWebsite" type="text" tabindex="-1" autocomplete="off"></div>
+          <button class="btn btn-primary" type="submit" id="contactBtn">Send message</button>
+          <p class="form-note">Kru Jeab will reply to you by email.</p>
         </form>
       </div>
+      <aside class="contact-card gym-card" aria-label="The Ring Gym details">
+        <a href="https://www.theringgym.com.au/" target="_blank" rel="noopener"><img class="gym-logo" src="https://images.squarespace-cdn.com/content/v1/6052b58442552e07acb23fe4/1616055996274-VWBXF6XRFAX9X7W857YX/The+Ring+Gym+logo.png?format=1500w" alt="The Ring Gym Muay Thai logo" width="450" height="120" loading="lazy"></a>
+        <h3>The Ring Gym</h3>
+        <ul class="contact-list">
+          <li><span>Address</span><span>83 Cranwell Street, Braybrook VIC 3019</span></li>
+          <li><span>Phone</span><a href="tel:0438797477">0438 797 477</a></li>
+          <li><span>Instagram</span><a href="https://www.instagram.com/theringgym" target="_blank" rel="noopener">@theringgym</a></li>
+          <li><span>Facebook</span><a href="https://www.facebook.com/theringgym/" target="_blank" rel="noopener">The Ring Gym</a></li>
+          <li><span>Website</span><a href="https://www.theringgym.com.au/" target="_blank" rel="noopener">theringgym.com.au</a></li>
+        </ul>
+        <p class="gym-ref">All of Kru Jeab's private &amp; group sessions are held here.</p>
+      </aside>
     </div>
   </div>
 </section>
@@ -606,7 +613,6 @@
 (function(){
   "use strict";
 
-  var NOTIFY_EMAIL = "jeabsamartpayakaroon@gmail.com";
   var BOOKING_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxtswxxfErav2Mc1BKmQQQQAyvYzgm8io90H8OjKE5zpGtYtY1GcwYOvIJ281iWtsC2/exec";
 
   var RATES = {
@@ -950,7 +956,7 @@
         renderTimeSlots();
       })
       .catch(function(){
-        showModal(false, "Couldn't send your request", "Something went wrong reaching the booking system. Please try again in a moment, or email Kru Jeab directly at " + NOTIFY_EMAIL + ".");
+        showModal(false, "Couldn't send your request", "Something went wrong reaching the booking system. Please try again in a moment.");
       })
       .then(function(){
         sending = false;
@@ -960,13 +966,41 @@
   });
 
   // ---- contact form ----
+  var contactSending = false;
   document.getElementById("contactForm").addEventListener("submit", function(e){
     e.preventDefault();
+    if (contactSending) return;
     var name = document.getElementById("cName").value.trim();
     var email = document.getElementById("cEmail").value.trim();
     var msg = document.getElementById("cMsg").value.trim();
-    var body = "From: " + name + " (" + email + ")\n\n" + msg;
-    window.open("mailto:" + NOTIFY_EMAIL + "?subject=" + encodeURIComponent("Question via booking page") + "&body=" + encodeURIComponent(body), "_blank");
+    var honey = document.getElementById("cWebsite").value;
+    var btn = document.getElementById("contactBtn");
+
+    if (!name){ showModal(false, "Name needed", "Please add your name so Kru Jeab knows who the message is from."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showModal(false, "Email needed", "Please add a valid email address so Kru Jeab can reply to you."); return; }
+    if (!msg){ showModal(false, "Message needed", "Please write a short message."); return; }
+    if (msg.length > 2000){ showModal(false, "Message too long", "Please keep your message under 2000 characters."); return; }
+
+    contactSending = true;
+    btn.disabled = true;
+    btn.textContent = "Sending\u2026";
+
+    var payload = new URLSearchParams({ type: "message", name: name, email: email, message: msg, website: honey });
+    fetch(BOOKING_WEBHOOK_URL, { method: "POST", body: payload })
+      .then(function(res){ return res.ok ? res.json() : Promise.reject(new Error("bad status")); })
+      .then(function(data){
+        if (!data || data.result !== "success") throw new Error("not accepted");
+        showModal(true, "Message sent!", "Thanks " + name.split(/\s+/)[0] + ". Kru Jeab will reply to you by email.");
+        ["cName","cEmail","cMsg"].forEach(function(id){ document.getElementById(id).value = ""; });
+      })
+      .catch(function(){
+        showModal(false, "Couldn't send your message", "Something went wrong. Please try again in a moment.");
+      })
+      .then(function(){
+        contactSending = false;
+        btn.disabled = false;
+        btn.textContent = "Send message";
+      });
   });
 
   // ---- account: sign in / sign up (front-end convenience only) ----
