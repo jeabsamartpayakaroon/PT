@@ -54,7 +54,7 @@
   var EXEC_URL = "https://script.google.com/macros/s/AKfycbxtswxxfErav2Mc1BKmQQQQAyvYzgm8io90H8OjKE5zpGtYtY1GcwYOvIJ281iWtsC2/exec";
   var q = new URLSearchParams(location.search);
   var who = q.get("who") === "client" ? "client" : "coach";
-  var id = q.get("id"), t = q.get("t");
+  var id = q.get("id") || "", t = q.get("t");
   var card = document.getElementById("card");
   var title = document.getElementById("title");
   var msg = document.getElementById("msg");
@@ -72,7 +72,7 @@
   function base(){ return EXEC_URL + "?who=" + who + "&id=" + encodeURIComponent(id) + "&t=" + encodeURIComponent(t); }
 
   function load(){
-    if (!id || !t){ show("bad", "Link not valid", "This cancel link is incomplete. Please use the link in your email."); return; }
+    if (!t || (who === "coach" && !id)){ show("bad", "Link not valid", "This cancel link is incomplete. Please use the link in your email."); return; }
     fetch(base() + "&action=cancel_info")
       .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
       .then(function(d){
