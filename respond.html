@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Booking response - Kru Jeab</title>
+<style>
+  body{margin:0; background:#0B0908; color:#F7F3EC; font-family:Georgia,"Times New Roman",serif; line-height:1.6;}
+  .wrap{max-width:480px; margin:0 auto; padding:56px 20px;}
+  .brand{font-family:"Arial Narrow",Arial,sans-serif; font-weight:800; letter-spacing:0.02em; text-transform:uppercase; font-size:1.1rem; margin-bottom:28px;}
+  .brand span{color:#FF6D2E;}
+  .card{background:#1C1817; border:1px solid #332B26; border-top:6px solid #FF6D2E; border-radius:6px; padding:30px 26px; text-align:center;}
+  .card.ok{border-top-color:#1f9d55;}
+  .card.bad{border-top-color:#c62828;}
+  h1{margin:0 0 12px; font-family:"Arial Narrow",Arial,sans-serif; text-transform:uppercase; font-size:1.7rem;}
+  .ok h1{color:#3ddc84;}
+  .bad h1{color:#ff6b6b;}
+  p{margin:0; color:#B7ADA2; white-space:pre-line; font-size:1.05rem;}
+  button{margin-top:22px; font:600 0.85rem "Courier New",monospace; letter-spacing:0.06em; text-transform:uppercase; background:#FF6D2E; color:#fff; border:0; border-radius:2px; padding:12px 22px; cursor:pointer;}
+  a{color:#FF8A52;}
+  .foot{margin-top:22px; text-align:center; font-size:0.85rem;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">Kru Jeab Samart <span>Payakaroon</span></div>
+  <div class="card" id="card">
+    <h1 id="title">Working on it&hellip;</h1>
+    <p id="msg">Updating the booking.</p>
+  </div>
+  <p class="foot"><a href="./">Back to the booking page</a></p>
+</div>
+<script>
+(function(){
+  var EXEC_URL = "https://script.google.com/macros/s/AKfycbxtswxxfErav2Mc1BKmQQQQAyvYzgm8io90H8OjKE5zpGtYtY1GcwYOvIJ281iWtsC2/exec";
+  var q = new URLSearchParams(location.search);
+  var action = q.get("action"), id = q.get("id"), t = q.get("t");
+  var card = document.getElementById("card");
+  var title = document.getElementById("title");
+  var msg = document.getElementById("msg");
+
+  function show(kind, ttl, text, retry){
+    card.className = "card " + kind;
+    title.textContent = ttl;
+    msg.textContent = text;
+    var old = card.querySelector("button");
+    if (old) old.remove();
+    if (retry){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = "Try again";
+      b.addEventListener("click", run);
+      card.appendChild(b);
+    }
+  }
+
+  function run(){
+    if ((action !== "confirm" && action !== "decline") || !id || !t){
+      show("bad", "Link not valid", "This booking link is incomplete. Please use the Accept or Decline button in the booking email.");
+      return;
+    }
+    show("", "Working on it…", "Updating the booking.");
+    var url = EXEC_URL + "?action=" + encodeURIComponent(action) + "&id=" + encodeURIComponent(id) + "&t=" + encodeURIComponent(t) + "&format=json";
+    fetch(url)
+      .then(function(res){ return res.ok ? res.json() : Promise.reject(new Error("bad status")); })
+      .then(function(data){ show(data.ok ? "ok" : "bad", data.title || "Done", data.message || ""); })
+      .catch(function(){ show("bad", "Couldn't reach the booking system", "Nothing was changed. Please check your connection and try again.", true); });
+  }
+  run();
+})();
+</script>
+</body>
+</html>
