@@ -1,0 +1,1035 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Private and small-group Muay Thai coaching with Kru Jeab Samart Payakaroon at The Ring Gym, Braybrook, Melbourne.">
+</head>
+<body>
+<title>Kru Jeab Samart Payakaroon</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  /* Palette sampled directly from theringgym.com.au: near-black ground
+     (#050000), charcoal surface (#262627), white ink, and their exact
+     CTA orange (#FF6D2E). This is a deliberate single (dark) theme —
+     the gym's own site doesn't switch for light mode either, and the
+     brand IS the black-and-orange corner, so we commit to it rather
+     than diluting it into a cream daytime version. */
+  :root{
+    --ground:#0B0908;
+    --surface:#1C1817;
+    --surface-2:#242020;
+    --ink:#F7F3EC;
+    --ink-soft:#B7ADA2;
+    --accent:#FF6D2E;
+    --accent-strong:#FF8A52;
+    --accent-ink:#1A0D06;
+    --gold:#FF6D2E;
+    --gold-soft:#FF8A52;
+    --oxblood:#FF6D2E;
+    --oxblood-strong:#FF8A52;
+    --line:#332B26;
+    --focus:#FF8A52;
+    --on-accent:#FFFFFF;
+    --shadow: 0 1px 0 rgba(0,0,0,0.4);
+
+    --font-display:"Big Shoulders Display","Arial Narrow",sans-serif;
+    --font-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --font-mono:"IBM Plex Mono","Courier New",monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:1.03rem;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;}
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--focus); outline-offset:3px;}
+
+  .wrap{max-width:1080px; margin:0 auto; padding-inline:24px;}
+
+  h1,h2,h3{font-family:var(--font-display); font-weight:700; text-transform:uppercase; letter-spacing:0.01em; text-wrap:balance; margin:0;}
+  .eyebrow{font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--oxblood); font-weight:600;}
+
+  /* ---------- NAV ---------- */
+  header.site{
+    position:sticky; top:0; z-index:40;
+    background:color-mix(in srgb, var(--ground) 88%, transparent);
+    backdrop-filter: blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-block:14px; gap:16px; flex-wrap:wrap;
+  }
+  .nav .mark{
+    font-family:var(--font-display); font-weight:800; font-size:1.15rem;
+    letter-spacing:0.02em; text-transform:uppercase;
+  }
+  .nav .mark span{color:var(--oxblood);}
+  .nav ul{list-style:none; display:flex; gap:22px; margin:0; padding:0; flex-wrap:wrap;}
+  .nav a{
+    text-decoration:none; font-family:var(--font-mono); font-size:0.78rem;
+    letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft);
+    padding:6px 2px; border-bottom:2px solid transparent;
+  }
+  .nav a:hover{color:var(--oxblood); border-color:var(--oxblood);}
+  .nav .cta{
+    background:var(--oxblood); color:var(--on-accent); padding:9px 16px; border-radius:2px;
+    border-bottom:none !important;
+  }
+  .nav .cta:hover{background:var(--oxblood-strong); color:var(--on-accent);}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding-block: 56px 44px;
+    border-bottom:1px solid var(--line);
+    background:
+      radial-gradient(ellipse 900px 400px at 85% -10%, color-mix(in srgb, var(--oxblood) 10%, transparent), transparent 70%),
+      var(--ground);
+  }
+  .hero .eyebrow{display:block; margin-bottom:14px;}
+  .hero h1{font-size:clamp(2.6rem, 5vw + 1.2rem, 5.2rem); line-height:0.94; letter-spacing:0.005em;}
+  .hero h1 em{
+    font-style:normal; color:var(--oxblood); display:block;
+  }
+  .hero .tagline{
+    font-family:var(--font-body); font-style:italic; color:var(--ink-soft);
+    font-size:clamp(1.05rem,1.6vw,1.3rem); margin-top:14px; max-width:46ch;
+  }
+  .stat-strip{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:1px; background:var(--line); border:1px solid var(--line);
+    margin-top:36px; border-radius:2px; overflow:hidden;
+  }
+  .stat-strip div{background:var(--surface); padding:16px 18px;}
+  .stat-strip .num{
+    font-family:var(--font-mono); font-weight:600; font-size:1.3rem; color:var(--oxblood);
+    font-variant-numeric:tabular-nums; display:block;
+  }
+  .stat-strip .lbl{font-size:0.74rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.06em;}
+  .hero-ctas{display:flex; gap:14px; margin-top:34px; flex-wrap:wrap;}
+
+  .hero-grid{display:grid; grid-template-columns:1.2fr 0.9fr; gap:44px; align-items:start;}
+  .hero-portrait{position:relative;}
+  .hero-portrait img{
+    width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:4px;
+    border:1px solid var(--line); display:block;
+  }
+  .photo-credit{
+    font-family:var(--font-mono); font-size:0.68rem; letter-spacing:0.04em;
+    color:var(--ink-soft); margin-top:8px; text-align:right;
+  }
+  .photo-credit a{color:var(--accent); text-decoration:underline; text-underline-offset:2px;}
+  figure.bio-photo{margin:28px 0 0;}
+  figure.bio-photo img{width:100%; border-radius:4px; border:1px solid var(--line); display:block;}
+  figure.bio-photo figcaption{font-family:var(--font-mono); font-size:0.68rem; color:var(--ink-soft); margin-top:8px; letter-spacing:0.04em;}
+  figure.bio-photo figcaption a{color:var(--accent); text-decoration:underline; text-underline-offset:2px;}
+
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr;}
+    .hero-portrait{max-width:340px;}
+  }
+
+  .btn{
+    font-family:var(--font-mono); font-size:0.82rem; letter-spacing:0.06em; text-transform:uppercase;
+    padding:13px 24px; border-radius:2px; text-decoration:none; display:inline-flex;
+    align-items:center; gap:8px; cursor:pointer; border:1px solid transparent; font-weight:600;
+  }
+  .btn-primary{background:var(--oxblood); color:var(--on-accent);}
+  .btn-primary:hover{background:var(--oxblood-strong);}
+  .btn-ghost{border-color:var(--line); color:var(--ink);}
+  .btn-ghost:hover{border-color:var(--oxblood); color:var(--oxblood);}
+  .btn:disabled{opacity:0.45; cursor:not-allowed;}
+
+  /* ---------- SECTIONS ---------- */
+  section{padding-block:64px;}
+  section + section{border-top:1px solid var(--line);}
+  .section-head{margin-bottom:34px; max-width:60ch;}
+  .section-head h2{font-size:clamp(1.7rem,2.6vw + 0.8rem,2.5rem); margin-top:8px;}
+
+  /* ---------- BIO ---------- */
+  .bio-grid{display:grid; grid-template-columns:1.3fr 1fr; gap:48px;}
+  .bio-grid p{margin:0 0 16px; max-width:62ch;}
+  blockquote{
+    font-family:var(--font-body); font-style:italic; font-size:1.2rem;
+    color:var(--ink); border-left:3px solid var(--gold); padding:4px 0 4px 20px;
+    margin:26px 0; max-width:56ch;
+  }
+  blockquote cite{display:block; font-style:normal; font-family:var(--font-mono); font-size:0.72rem;
+    color:var(--ink-soft); letter-spacing:0.06em; text-transform:uppercase; margin-top:10px;}
+
+  .timeline{list-style:none; margin:0; padding:0; border-left:1px solid var(--line); }
+  .timeline li{position:relative; padding:2px 0 26px 26px;}
+  .timeline li::before{
+    content:""; position:absolute; left:-5px; top:6px; width:9px; height:9px;
+    border-radius:50%; background:var(--gold); border:2px solid var(--ground);
+  }
+  .timeline .when{font-family:var(--font-mono); font-size:0.76rem; color:var(--oxblood); letter-spacing:0.05em; text-transform:uppercase; display:block; margin-bottom:4px;}
+  .timeline .what{font-size:0.96rem; color:var(--ink-soft);}
+  .aside-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:3px;
+    padding:20px 22px; margin-top:28px; font-size:0.92rem; color:var(--ink-soft);
+  }
+  .aside-card strong{color:var(--ink); font-family:var(--font-mono); font-size:0.74rem; letter-spacing:0.08em; text-transform:uppercase; display:block; margin-bottom:8px;}
+
+  .affiliation{
+    display:flex; align-items:center; gap:14px; margin-top:30px; padding-top:26px;
+    border-top:1px solid var(--line); flex-wrap:wrap;
+  }
+  .affiliation a{
+    font-family:var(--font-mono); font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--oxblood); text-decoration:underline; text-underline-offset:3px;
+  }
+
+  /* ---------- TRAIN FOR ---------- */
+  .for-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line);}
+  .for-grid div{background:var(--surface-2); padding:26px 22px;}
+  .for-grid h3{font-size:1.05rem; margin-bottom:10px; letter-spacing:0;}
+  .for-grid p{margin:0; font-size:0.92rem; color:var(--ink-soft);}
+
+  /* ---------- BOOKING ---------- */
+  .book-shell{
+    display:grid; grid-template-columns:1.5fr 1fr; gap:36px; align-items:start;
+  }
+  .panel{background:var(--surface); border:1px solid var(--line); border-radius:4px; padding:26px;}
+  .step-label{font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft); display:flex; gap:8px; align-items:center; margin-bottom:12px;}
+  .step-label b{color:var(--oxblood);}
+  .chip-row{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:28px;}
+  .chip{
+    font-family:var(--font-mono); font-size:0.82rem; padding:10px 16px; border-radius:20px;
+    border:1px solid var(--line); background:var(--surface-2); cursor:pointer; color:var(--ink);
+  }
+  .chip[aria-pressed="true"]{background:var(--oxblood); border-color:var(--oxblood); color:var(--on-accent);}
+  .chip:hover:not([aria-pressed="true"]){border-color:var(--oxblood); color:var(--oxblood);}
+  .chip:disabled{opacity:0.35; cursor:not-allowed; text-decoration:line-through;}
+  .chip:disabled:hover{border-color:var(--line); color:var(--ink);}
+
+  .stepper{display:flex; align-items:center; gap:14px; margin-bottom:28px;}
+  .stepper button{
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:var(--surface-2);
+    font-family:var(--font-mono); font-size:1rem; cursor:pointer; color:var(--ink);
+  }
+  .stepper button:hover{border-color:var(--oxblood); color:var(--oxblood);}
+  .stepper .count{font-family:var(--font-mono); font-size:1.1rem; min-width:64px; text-align:center; font-variant-numeric:tabular-nums;}
+
+  .cal-nav{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;}
+  .cal-nav .label{font-family:var(--font-mono); font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;}
+  .cal-nav button{background:none; border:1px solid var(--line); border-radius:2px; width:30px; height:30px; cursor:pointer; color:var(--ink); font-family:var(--font-mono);}
+  .cal-nav button:hover{border-color:var(--oxblood); color:var(--oxblood);}
+  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:28px;}
+  .cal-grid .dow{font-family:var(--font-mono); font-size:0.65rem; text-align:center; color:var(--ink-soft); text-transform:uppercase; padding-bottom:4px;}
+  .cal-grid button.day{
+    aspect-ratio:1; border-radius:3px; border:1px solid var(--line); background:var(--surface-2);
+    font-family:var(--font-mono); font-size:0.82rem; cursor:pointer; color:var(--ink);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .cal-grid button.day:hover:not(:disabled){border-color:var(--oxblood); color:var(--oxblood);}
+  .cal-grid button.day[aria-pressed="true"]{background:var(--oxblood); border-color:var(--oxblood); color:var(--on-accent);}
+  .cal-grid button.day:disabled{opacity:0.28; cursor:not-allowed;}
+  .cal-grid .empty{visibility:hidden;}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); margin-bottom:6px;}
+  .field input, .field textarea{
+    width:100%; font-family:var(--font-body); font-size:0.98rem; padding:11px 12px;
+    border:1px solid var(--line); border-radius:3px; background:var(--surface-2); color:var(--ink);
+  }
+  .field textarea{min-height:80px; resize:vertical;}
+  .field input:focus, .field textarea:focus{border-color:var(--oxblood);}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+
+  /* price summary */
+  .price-panel{position:sticky; top:88px;}
+  .price-panel h3{font-size:1.1rem; margin-bottom:18px;}
+  .price-line{display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line); font-size:0.92rem;}
+  .price-line .v{font-family:var(--font-mono); font-variant-numeric:tabular-nums;}
+  .price-line.total{font-weight:600; font-size:1.05rem; border-bottom:none; padding-top:16px;}
+  .price-line.total .v{color:var(--oxblood); font-size:1.3rem;}
+  .price-line.deposit .v{color:var(--gold);}
+  .price-note{font-size:0.8rem; color:var(--ink-soft); margin-top:6px; margin-bottom:22px;}
+
+  .confirm-card{
+    margin-top:22px; padding:20px; border:1px dashed var(--gold); border-radius:4px; background:var(--surface-2);
+    font-size:0.88rem; display:none;
+  }
+  .confirm-card.show{display:block;}
+  .confirm-card h4{font-family:var(--font-mono); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--oxblood); margin:0 0 10px;}
+  .confirm-card dl{display:grid; grid-template-columns:auto 1fr; gap:4px 14px; margin:0 0 14px; font-family:var(--font-mono); font-size:0.82rem;}
+  .confirm-card dt{color:var(--ink-soft);}
+  .confirm-card .pay-box{background:var(--ground); border:1px dashed var(--line); border-radius:3px; padding:14px; margin:14px 0; font-family:var(--font-mono); font-size:0.8rem; line-height:1.9;}
+  .confirm-card .pay-box .ph{color:var(--gold);}
+  .confirm-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+
+  /* ---------- ACCOUNT / SIGN IN ---------- */
+  .account-shell{max-width:480px;}
+  .account-tabs{display:flex; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:3px; overflow:hidden; margin-bottom:24px;}
+  .account-tabs button{
+    flex:1; background:var(--surface-2); border:none; padding:12px; cursor:pointer;
+    font-family:var(--font-mono); font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft);
+  }
+  .account-tabs button[aria-pressed="true"]{background:var(--oxblood); color:var(--on-accent);}
+  .oauth-row{display:grid; gap:10px; margin-bottom:20px;}
+  .oauth-btn{
+    width:100%; justify-content:center; background:var(--surface-2); border:1px solid var(--line); color:var(--ink);
+  }
+  .oauth-btn:hover{border-color:var(--oxblood); color:var(--oxblood);}
+  .oauth-note{
+    display:none; font-size:0.78rem; color:var(--ink-soft); background:var(--ground);
+    border:1px dashed var(--line); border-radius:3px; padding:10px 12px; margin:-4px 0 16px;
+  }
+  .oauth-note.show{display:block;}
+  .divider{display:flex; align-items:center; gap:12px; margin:4px 0 18px; color:var(--ink-soft); font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em;}
+  .divider::before, .divider::after{content:""; flex:1; height:1px; background:var(--line);}
+  .account-signedin{display:none; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .account-signedin.show{display:flex;}
+  .account-signedin .who{font-size:0.92rem;}
+  .account-signedin .who b{display:block; font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; color:var(--ink-soft); letter-spacing:0.05em; margin-bottom:2px; font-weight:600;}
+  .account-forms.hide{display:none;}
+  .nav-account{font-family:var(--font-mono); font-size:0.72rem; color:var(--ink-soft); letter-spacing:0.04em;}
+  .nav-account a{color:var(--accent);}
+
+  /* ---------- CONTACT ---------- */
+  .contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:40px;}
+  .contact-card{background:var(--surface); border:1px solid var(--line); border-radius:4px; padding:24px;}
+  .contact-card h3{font-size:1rem; margin-bottom:16px;}
+  .contact-list{list-style:none; margin:0; padding:0; display:grid; gap:12px;}
+  .contact-list li{display:flex; justify-content:space-between; gap:12px; font-size:0.92rem; border-bottom:1px solid var(--line); padding-bottom:10px;}
+  .contact-list span:first-child{color:var(--ink-soft); font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; padding-top:2px;}
+  .contact-list .ph{color:var(--gold); font-style:italic;}
+  .contact-list a{color:var(--accent); text-decoration:underline; text-underline-offset:2px;}
+  .gym-ref{margin-top:18px; padding-top:18px; border-top:1px solid var(--line); font-size:0.86rem; color:var(--ink-soft);}
+  .gym-ref a{color:var(--oxblood); text-decoration:underline; text-underline-offset:2px;}
+
+  form.contact-form .field{margin-bottom:14px;}
+  .form-note{font-size:0.78rem; color:var(--ink-soft); margin-top:10px;}
+
+  footer{padding-block:36px; text-align:center;}
+  footer p{margin:0 0 6px; font-size:0.78rem; color:var(--ink-soft); font-family:var(--font-mono);}
+  footer .disclaimer{max-width:60ch; margin-inline:auto; color:var(--ink-soft); opacity:0.8;}
+
+  @media (max-width: 780px){
+    .bio-grid, .book-shell, .contact-grid{grid-template-columns:1fr;}
+    .price-panel{position:static;}
+    .field-row{grid-template-columns:1fr;}
+    .nav ul{gap:14px;}
+  }
+</style>
+
+<header class="site">
+  <div class="wrap nav">
+    <div class="mark">KRU JEAB SAMART <span>PAYAKAROON</span></div>
+    <ul>
+      <li><a href="#bio">Bio</a></li>
+      <li><a href="#train">Training</a></li>
+      <li><a href="#book">Book</a></li>
+      <li><a href="#account">Sign in</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a class="btn cta" href="#book">Book a session</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Senior Coach &amp; Referee · The Ring Gym, Braybrook</span>
+      <h1>Kru Jeab Samart<em>Payakaroon</em></h1>
+      <p class="tagline">Private and small-group Muay Thai coaching for fighters and serious students who want to sharpen technique, condition for fights, and train the way it's taught in Thailand.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#book">Check availability &amp; book</a>
+        <a class="btn btn-ghost" href="#bio">Read his story</a>
+      </div>
+      <div class="stat-strip">
+        <div><span class="num">100+</span><span class="lbl">Professional fights</span></div>
+        <div><span class="num">20+</span><span class="lbl">Years coaching</span></div>
+        <div><span class="num">Est. 2002</span><span class="lbl">Sityodtong Muay Thai, Brunswick</span></div>
+        <div><span class="num">Age 9</span><span class="lbl">Started fighting</span></div>
+      </div>
+    </div>
+    <div class="hero-portrait">
+      <img src="images/portrait.png" alt="Kru Jeab Samart Payakaroon, in a Ring Gym t-shirt, standing in front of the ring at The Ring Gym, Braybrook.">
+      <p class="photo-credit">Photo courtesy of <a href="https://www.theringgym.com.au/" target="_blank" rel="noopener">The Ring Gym</a></p>
+    </div>
+  </div>
+</section>
+
+<section id="bio">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">The story</span>
+      <h2>The Godfather of Muay Thai</h2>
+    </div>
+    <div class="bio-grid">
+      <div>
+        <p>Known across Melbourne's martial arts community as "the Godfather of Muay Thai" — and to his students as "Muay Thai Yoda" — Kru Jeab Samart Payakaroon has spent a lifetime in the sport. He started fighting at age 9 and went on to a professional career of more than 100 fights, the kind of record that very few coaches in Australia can put behind their teaching.</p>
+        <p>In 2002 he opened Sityodtong Muay Thai in Brunswick — holding formal permission to represent the legendary Sityodtong gym of Pattaya, Thailand, here in Melbourne — and has spent the two decades since producing champions and mentoring hundreds of fighters through every stage of the sport, from a first pad session to fight night. He remains active around the sport as a judge and referee at major promotions, and now coaches as Senior Coach at The Ring Gym in Braybrook.</p>
+        <blockquote>
+          "Muay Thai has always been my life. I love sharing what I know and helping others grow. It's a proud part of my culture and a fair, honest sport."
+          <cite>Kru Jeab Samart Payakaroon</cite>
+        </blockquote>
+        <p>Students who trained with him in the Brunswick years describe a gym run the traditional Thai way: no set class structure, just open floor time where Jeab called fighters over for rounds on the pads and corrected technique on the spot. The rest was learned by watching — his coaching adapted to each fighter's individual strengths and weaknesses rather than one style for everyone. That same personalised, pads-on approach is what carries over into the private and small-group sessions on this page.</p>
+        <p>This page is for the training he runs outside of regular class hours: one-on-one and small-group sessions built around fight preparation and levelling up technique, for anyone from competing amateurs to students who simply want to train properly.</p>
+        <div class="aside-card">
+          <strong>Off the mats</strong>
+          When he's not coaching, Kru Jeab is usually at the track — a lifelong greyhound racing fan — spending time with his dogs, or watching Liverpool play.
+        </div>
+      </div>
+      <div>
+        <ul class="timeline">
+          <li><span class="when">Age 9</span><span class="what">Begins fighting — the start of a professional career that would span more than 100 bouts.</span></li>
+          <li><span class="when">2002</span><span class="what">Opens Sityodtong Muay Thai in Brunswick with formal permission to represent Pattaya's Sityodtong gym in Melbourne — starting two decades of coaching and producing champions.</span></li>
+          <li><span class="when">Ongoing</span><span class="what">Regularly judges and referees at top Muay Thai promotions.</span></li>
+          <li><span class="when">Today</span><span class="what">Senior Coach at The Ring Gym, Braybrook — and taking private &amp; small-group bookings via this page.</span></li>
+        </ul>
+        <div class="affiliation">
+          <a href="https://www.theringgym.com.au/our-team" target="_blank" rel="noopener">Full bio at The Ring Gym ↗</a>
+        </div>
+        <figure class="bio-photo">
+          <img src="images/corner-coaching.png" alt="Kru Jeab giving a fighter instructions in the corner between rounds.">
+          <figcaption>Kru Jeab in the corner between rounds. Photo: <a href="https://resiliencemt.com.au/boxing-muay-thai/" target="_blank" rel="noopener">resiliencemt.com.au</a></figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="train">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Who this is for</span>
+      <h2>Fight training, not just fitness</h2>
+    </div>
+    <div class="for-grid">
+      <div>
+        <h3>Fighters in camp</h3>
+        <p>Pad work, sparring strategy and fight-specific conditioning for anyone with a bout on the calendar — tailored to your opponent and your gaps, not a generic class plan.</p>
+      </div>
+      <div>
+        <h3>Levelling up technique</h3>
+        <p>For students who've got the basics and want the details fixed — clinch, teeps, timing, defence — the small corrections that separate good from fight-ready.</p>
+      </div>
+      <div>
+        <h3>Small squads</h3>
+        <p>Train fight-focused sessions with a training partner or a few teammates. Same coaching, split cost, and the added benefit of live sparring reps.</p>
+      </div>
+      <div>
+        <h3>Coming back / starting late</h3>
+        <p>One-on-one time to build fundamentals properly and safely, at your pace, before stepping into group classes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="book">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Book a session</span>
+      <h2>Reserve your training slot</h2>
+      <p style="color:var(--ink-soft); margin-top:10px;">Pick a format, a duration, and a time. This sends a booking <em>request</em> — Kru Jeab confirms it personally, since fight camps and gradings can shift the schedule.</p>
+      <p style="color:var(--ink-soft); margin-top:6px;">
+        <span class="eyebrow" style="color:var(--accent);">Location</span>
+        — all sessions are held at <a href="https://www.theringgym.com.au/" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:underline; text-underline-offset:3px;">The Ring Gym</a>, 83 Cranwell Street, Braybrook VIC 3019.
+      </p>
+    </div>
+
+    <div class="book-shell">
+      <div class="panel">
+        <div class="step-label"><b>01</b> Session type</div>
+        <div class="chip-row" id="typeChips">
+          <button class="chip" type="button" data-type="private" aria-pressed="true">Private (1-on-1)</button>
+          <button class="chip" type="button" data-type="group" aria-pressed="false">Group (2+)</button>
+        </div>
+
+        <div id="groupStepWrap" style="display:none;">
+          <div class="step-label"><b>02</b> Group size</div>
+          <div class="stepper">
+            <button type="button" id="grpMinus" aria-label="Decrease group size">−</button>
+            <span class="count" id="grpCount">2 people</span>
+            <button type="button" id="grpPlus" aria-label="Increase group size">+</button>
+          </div>
+        </div>
+
+        <div class="step-label"><b id="durStepNum">02</b> Duration</div>
+        <div class="chip-row" id="durChips">
+          <button class="chip" type="button" data-dur="30" aria-pressed="false">30 min</button>
+          <button class="chip" type="button" data-dur="45" aria-pressed="false">45 min</button>
+          <button class="chip" type="button" data-dur="60" aria-pressed="true">60 min</button>
+        </div>
+
+        <div class="step-label"><b id="dateStepNum">03</b> Date</div>
+        <div class="cal-nav">
+          <button type="button" id="calPrev" aria-label="Previous month">‹</button>
+          <span class="label" id="calLabel"></span>
+          <button type="button" id="calNext" aria-label="Next month">›</button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <p class="price-note" style="margin-top:-18px;">Closed Sundays. Mon–Fri 9:30–11:30am and 6:00–7:30pm are reserved for other classes.</p>
+
+        <div class="step-label"><b id="timeStepNum">04</b> Time</div>
+        <div class="chip-row" id="timeChips"></div>
+        <p class="price-note" style="margin-top:-10px;">One-hour blocks, 6am–5pm, outside the reserved windows above. Exact time confirmed when Kru Jeab accepts your request.</p>
+
+        <div class="step-label"><b id="detailStepNum">05</b> Your details</div>
+        <div class="field-row">
+          <div class="field"><label for="fName">Name (required)</label><input id="fName" type="text" autocomplete="name" placeholder="Full name" required></div>
+          <div class="field"><label for="fPhone">Phone (required)</label><input id="fPhone" type="tel" autocomplete="tel" placeholder="04xx xxx xxx" required></div>
+        </div>
+        <div class="field"><label for="fEmail">Email (required)</label><input id="fEmail" type="email" autocomplete="email" placeholder="you@email.com" required></div>
+        <div class="field"><label for="fNotes">Goals / experience (optional)</label><textarea id="fNotes" placeholder="e.g. first amateur fight in 8 weeks, or: 6 months training, want cleaner clinch work"></textarea></div>
+      </div>
+
+      <div class="price-panel">
+        <div class="panel">
+          <h3>Session summary</h3>
+          <div class="price-line"><span>Format</span><span class="v" id="sumFormat">Private, 60 min</span></div>
+          <div class="price-line"><span>Location</span><span class="v">The Ring Gym</span></div>
+          <div class="price-line"><span>Date &amp; time</span><span class="v" id="sumWhen">Not selected</span></div>
+          <div class="price-line"><span>Rate</span><span class="v" id="sumRate">—</span></div>
+          <div class="price-line total"><span>Total</span><span class="v" id="sumTotal">—</span></div>
+          <div class="price-line deposit"><span>Deposit due now (20%)</span><span class="v" id="sumDeposit">—</span></div>
+          <div class="price-line"><span>Balance at session</span><span class="v" id="sumBalance">—</span></div>
+          <p class="price-note">Group rate is charged per person. A 20% deposit secures your slot; the balance is paid at the session.</p>
+          <button class="btn btn-primary" id="requestBtn" type="button" style="width:100%; justify-content:center;" disabled>Request this session</button>
+
+          <div class="confirm-card" id="confirmCard">
+            <h4>Request ready — ref #<span id="refCode"></span></h4>
+            <dl id="confirmDl"></dl>
+            <div class="pay-box">
+              20% deposit: <span id="payDepositAmt"></span><br>
+              PayID: <span class="ph">[add your PayID — mobile or email]</span><br>
+              Bank transfer — BSB: <span class="ph">[add BSB]</span> Acc: <span class="ph">[add account no.]</span><br>
+              Account name: Jeab Samart Payakaroon<br>
+              Reference: <span id="payRef"></span>
+            </div>
+            <p class="price-note" id="submitStatus" style="margin-bottom:0;">Sending your request to Kru Jeab…</p>
+            <div class="confirm-actions">
+              <a class="btn btn-primary" id="emailReqBtn" href="#" target="_blank" rel="noopener">Email this request instead</a>
+              <a class="btn btn-ghost" href="https://www.instagram.com/theringgym" target="_blank" rel="noopener">Message via Instagram</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="account">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Your account</span>
+      <h2>Sign in or sign up</h2>
+      <p style="color:var(--ink-soft); margin-top:10px;">Save your details once so booking a session next time only takes a click.</p>
+    </div>
+
+    <div class="account-shell panel">
+      <div class="account-signedin" id="signedInView">
+        <div class="who"><b>Signed in</b><span id="signedInLabel"></span></div>
+        <button class="btn btn-ghost" id="signOutBtn" type="button">Sign out</button>
+      </div>
+
+      <div class="account-forms" id="accountForms">
+        <div class="account-tabs">
+          <button type="button" data-mode="signin" aria-pressed="true">Sign in</button>
+          <button type="button" data-mode="signup" aria-pressed="false">Sign up</button>
+        </div>
+
+        <div class="oauth-row">
+          <button class="btn oauth-btn" type="button" data-provider="Google">Continue with Google</button>
+          <button class="btn oauth-btn" type="button" data-provider="Facebook">Continue with Facebook</button>
+        </div>
+        <p class="oauth-note" id="oauthNote"></p>
+
+        <div class="divider">or with email</div>
+
+        <div class="field"><label for="acctName">Name</label><input id="acctName" type="text" autocomplete="name" placeholder="Full name"></div>
+        <div class="field"><label for="acctEmail">Email</label><input id="acctEmail" type="email" autocomplete="email" placeholder="you@email.com"></div>
+        <button class="btn btn-primary" id="acctContinueBtn" type="button" style="width:100%; justify-content:center;">Continue with email</button>
+        <p class="price-note" style="margin-bottom:0;">No password needed — this just pre-fills your name and email when you book, on this device.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Questions</span>
+      <h2>Get in touch</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <h3>Direct</h3>
+        <ul class="contact-list">
+          <li><span>Email</span><a href="mailto:jeabsamartpayakaroon@gmail.com">jeabsamartpayakaroon@gmail.com</a></li>
+          <li><span>Phone</span><span class="ph">[add your phone]</span></li>
+        </ul>
+        <div class="gym-ref">
+          <strong>The Ring Gym</strong> — training venue details below:<br>
+          83 Cranwell Street, Braybrook VIC 3019 ·
+          <a href="tel:0438797477">0438 797 477</a> ·
+          <a href="https://www.instagram.com/theringgym" target="_blank" rel="noopener">Instagram</a> ·
+          <a href="https://www.facebook.com/theringgym/" target="_blank" rel="noopener">Facebook</a> ·
+          <a href="https://www.theringgym.com.au/" target="_blank" rel="noopener">theringgym.com.au</a>
+        </div>
+      </div>
+      <div class="contact-card">
+        <h3>Send a message</h3>
+        <form class="contact-form" id="contactForm">
+          <div class="field"><label for="cName">Name</label><input id="cName" type="text" required></div>
+          <div class="field"><label for="cEmail">Email</label><input id="cEmail" type="email" required></div>
+          <div class="field"><label for="cMsg">Message</label><textarea id="cMsg" required placeholder="Ask about training, fight prep, or anything else"></textarea></div>
+          <button class="btn btn-primary" type="submit">Send message</button>
+          <p class="form-note">Opens your email app with this message ready to send.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Kru Jeab Samart Payakaroon — Muay Thai Coaching</p>
+    <p class="disclaimer">Independent booking page for Kru Jeab's private &amp; group sessions — not the official site of The Ring Gym. Some contact/payment details are placeholders and should be replaced with real ones before sharing.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var NOTIFY_EMAIL = "jeabsamartpayakaroon@gmail.com";
+  var BOOKING_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxtswxxfErav2Mc1BKmQQQQAyvYzgm8io90H8OjKE5zpGtYtY1GcwYOvIJ281iWtsC2/exec";
+
+  var RATES = {
+    30: { private: 70,  group: {2:50, 3:42, 4:38, 5:35, 6:32} },
+    45: { private: 95,  group: {2:68, 3:55, 4:48, 5:44, 6:40} },
+    60: { private: 120, group: {2:85, 3:70, 4:60, 5:54, 6:48} }
+  };
+
+  // Hourly blocks 6am–5pm, Mon–Sat, minus the reserved windows
+  // (9:30–11:30am and 6:00–7:30pm) and minus Sunday entirely.
+  var DAY_START_HOUR = 6;
+  var DAY_END_HOUR = 17; // last start time, 5pm
+  var BLOCKED_RANGES = [[9.5, 11.5], [18, 19.5]];
+
+  var DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  var MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  function formatHour(h){
+    var period = h < 12 || h === 24 ? "AM" : "PM";
+    var h12 = h % 12;
+    if (h12 === 0) h12 = 12;
+    return h12 + ":00 " + period;
+  }
+
+  function buildDaySlots(){
+    var slots = [];
+    for (var h = DAY_START_HOUR; h <= DAY_END_HOUR; h++){
+      var slotStart = h, slotEnd = h + 1;
+      var blocked = BLOCKED_RANGES.some(function(b){ return slotStart < b[1] && slotEnd > b[0]; });
+      if (!blocked) slots.push(formatHour(h));
+    }
+    return slots;
+  }
+  var DAY_SLOTS = buildDaySlots();
+
+  var state = {
+    type: "private",
+    duration: 60,
+    groupSize: 2,
+    monthOffset: 0,
+    date: null,   // Date object
+    time: null
+  };
+
+  function fmt(n){ return "$" + n.toLocaleString("en-AU"); }
+
+  function isoDateStr(d){
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+
+  // Slots Kru Jeab has already confirmed, loaded from the booking sheet
+  // so the calendar can grey them out for everyone else. Keyed
+  // "YYYY-MM-DD|H:MM AM/PM" to match isoDateStr() + formatHour() output.
+  var bookedSlots = new Set();
+  function fetchBookedSlots(){
+    fetch(BOOKING_WEBHOOK_URL, { method: "GET" })
+      .then(function(res){ return res.ok ? res.json() : Promise.reject(new Error("bad status")); })
+      .then(function(data){
+        (data.bookedSlots || []).forEach(function(s){ bookedSlots.add(s.date + "|" + s.time); });
+        if (state.date) renderTimeSlots();
+      })
+      .catch(function(){ /* fail open — if this can't be reached, slots just show unblocked */ });
+  }
+
+  function slotsForDate(d){
+    if (d.getDay() === 0) return []; // Sunday closed
+    return DAY_SLOTS;
+  }
+
+  function priceInfo(){
+    var r = RATES[state.duration];
+    if (state.type === "private"){
+      return { perPerson: r.private, total: r.private, label: "Private, " + state.duration + " min" };
+    }
+    var size = state.groupSize;
+    var tier = size <= 6 ? size : 6;
+    var pp = r.group[tier];
+    return { perPerson: pp, total: pp * size, label: "Group ×" + size + ", " + state.duration + " min" };
+  }
+
+  function renderChips(container, selector, cb){
+    container.querySelectorAll(selector).forEach(function(btn){
+      btn.addEventListener("click", function(){
+        container.querySelectorAll(selector).forEach(function(b){ b.setAttribute("aria-pressed","false"); });
+        btn.setAttribute("aria-pressed","true");
+        cb(btn);
+      });
+    });
+  }
+
+  var typeChips = document.getElementById("typeChips");
+  var groupWrap = document.getElementById("groupStepWrap");
+  renderChips(typeChips, ".chip", function(btn){
+    state.type = btn.getAttribute("data-type");
+    groupWrap.style.display = state.type === "group" ? "block" : "none";
+    renumberSteps();
+    updateSummary();
+  });
+
+  var grpCount = document.getElementById("grpCount");
+  document.getElementById("grpMinus").addEventListener("click", function(){
+    state.groupSize = Math.max(2, state.groupSize - 1);
+    grpCount.textContent = state.groupSize + (state.groupSize >= 6 ? "+ people" : " people");
+    updateSummary();
+  });
+  document.getElementById("grpPlus").addEventListener("click", function(){
+    state.groupSize = Math.min(10, state.groupSize + 1);
+    grpCount.textContent = state.groupSize + (state.groupSize >= 6 ? "+ people" : " people");
+    updateSummary();
+  });
+
+  var durChips = document.getElementById("durChips");
+  renderChips(durChips, ".chip", function(btn){
+    state.duration = parseInt(btn.getAttribute("data-dur"), 10);
+    if (state.date) renderTimeSlots();
+    updateSummary();
+  });
+
+  function renumberSteps(){
+    var n = 2;
+    document.getElementById("durStepNum").textContent = String(n++).padStart(2,"0");
+    document.getElementById("dateStepNum").textContent = String(n++).padStart(2,"0");
+    document.getElementById("timeStepNum").textContent = String(n++).padStart(2,"0");
+    document.getElementById("detailStepNum").textContent = String(n++).padStart(2,"0");
+  }
+
+  // ---- calendar ----
+  var calGrid = document.getElementById("calGrid");
+  var calLabel = document.getElementById("calLabel");
+
+  function renderCalendar(){
+    var today = new Date(); today.setHours(0,0,0,0);
+    var viewYear = today.getFullYear();
+    var viewMonth = today.getMonth() + state.monthOffset;
+
+    var firstOfMonth = new Date(viewYear, viewMonth, 1);
+    var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+    var startDow = firstOfMonth.getDay();
+
+    calGrid.innerHTML = "";
+    DOW.forEach(function(d){
+      var el = document.createElement("div");
+      el.className = "dow";
+      el.textContent = d;
+      calGrid.appendChild(el);
+    });
+
+    for (var lead = 0; lead < startDow; lead++){
+      var pad = document.createElement("div");
+      pad.className = "empty";
+      calGrid.appendChild(pad);
+    }
+
+    for (var day = 1; day <= daysInMonth; day++){
+      var d = new Date(viewYear, viewMonth, day);
+      var btn = document.createElement("button");
+      btn.className = "day";
+      btn.type = "button";
+      btn.textContent = day;
+      var past = d < today;
+      var closed = d.getDay() === 0;
+      if (past || closed) btn.disabled = true;
+      if (state.date && d.getTime() === state.date.getTime()) btn.setAttribute("aria-pressed","true");
+      else btn.setAttribute("aria-pressed","false");
+      (function(dateVal, buttonEl){
+        buttonEl.addEventListener("click", function(){
+          state.date = dateVal;
+          state.time = null;
+          renderCalendar();
+          renderTimeSlots();
+          updateSummary();
+        });
+      })(d, btn);
+      calGrid.appendChild(btn);
+    }
+    calLabel.textContent = MONTHS[((viewMonth % 12) + 12) % 12] + " " + new Date(viewYear, viewMonth, 1).getFullYear();
+  }
+
+  document.getElementById("calPrev").addEventListener("click", function(){
+    if (state.monthOffset > 0) { state.monthOffset--; renderCalendar(); }
+  });
+  document.getElementById("calNext").addEventListener("click", function(){
+    if (state.monthOffset < 11) { state.monthOffset++; renderCalendar(); }
+  });
+
+  var timeChips = document.getElementById("timeChips");
+  function renderTimeSlots(){
+    timeChips.innerHTML = "";
+    if (!state.date){
+      timeChips.innerHTML = '<span class="price-note">Pick a date first.</span>';
+      return;
+    }
+    var slots = slotsForDate(state.date);
+    if (!slots.length){
+      timeChips.innerHTML = '<span class="price-note">Closed this day — pick another date.</span>';
+      return;
+    }
+    var dKey = isoDateStr(state.date);
+    slots.forEach(function(t){
+      var btn = document.createElement("button");
+      btn.className = "chip";
+      btn.type = "button";
+      var taken = bookedSlots.has(dKey + "|" + t);
+      btn.textContent = taken ? t + " · Booked" : t;
+      btn.setAttribute("aria-pressed", state.time === t ? "true" : "false");
+      if (taken){
+        btn.disabled = true;
+      } else {
+        btn.addEventListener("click", function(){
+          state.time = t;
+          timeChips.querySelectorAll(".chip").forEach(function(c){ c.setAttribute("aria-pressed","false"); });
+          btn.setAttribute("aria-pressed","true");
+          updateSummary();
+        });
+      }
+      timeChips.appendChild(btn);
+    });
+  }
+
+  // ---- summary / price ----
+  var sumFormat = document.getElementById("sumFormat");
+  var sumWhen = document.getElementById("sumWhen");
+  var sumRate = document.getElementById("sumRate");
+  var sumTotal = document.getElementById("sumTotal");
+  var sumDeposit = document.getElementById("sumDeposit");
+  var sumBalance = document.getElementById("sumBalance");
+  var requestBtn = document.getElementById("requestBtn");
+
+  function updateSummary(){
+    var info = priceInfo();
+    sumFormat.textContent = info.label;
+    if (state.date && state.time){
+      sumWhen.textContent = DOW[state.date.getDay()] + " " + MONTHS[state.date.getMonth()].slice(0,3) + " " + state.date.getDate() + ", " + state.time;
+    } else {
+      sumWhen.textContent = "Not selected";
+    }
+    sumRate.textContent = state.type === "group" ? fmt(info.perPerson) + " / person" : fmt(info.perPerson);
+    sumTotal.textContent = fmt(info.total);
+    var deposit = Math.round(info.total * 0.2);
+    sumDeposit.textContent = fmt(deposit);
+    sumBalance.textContent = fmt(info.total - deposit);
+
+    var ready = !!(state.date && state.time);
+    requestBtn.disabled = !ready;
+  }
+
+  // ---- request / confirm ----
+  var confirmCard = document.getElementById("confirmCard");
+  requestBtn.addEventListener("click", function(){
+    var name = document.getElementById("fName").value.trim();
+    var email = document.getElementById("fEmail").value.trim();
+    var phone = document.getElementById("fPhone").value.trim();
+    var notes = document.getElementById("fNotes").value.trim();
+
+    if (!name){
+      alert("Please add your name so Kru Jeab can confirm your slot.");
+      document.getElementById("fName").focus();
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+      alert("Please add a valid email address — it's required so Kru Jeab can confirm your slot.");
+      document.getElementById("fEmail").focus();
+      return;
+    }
+    if (phone.replace(/\D/g, "").length < 8){
+      alert("Please add a valid phone number — it's required so Kru Jeab can contact you to confirm your slot.");
+      document.getElementById("fPhone").focus();
+      return;
+    }
+
+    var info = priceInfo();
+    var deposit = Math.round(info.total * 0.2);
+    var whenStr = DOW[state.date.getDay()] + " " + MONTHS[state.date.getMonth()].slice(0,3) + " " + state.date.getDate() + ", " + state.time;
+    var ref = "JS-" + String(state.date.getMonth()+1).padStart(2,"0") + String(state.date.getDate()).padStart(2,"0") + "-" + Math.random().toString(36).slice(2,5).toUpperCase();
+
+    document.getElementById("refCode").textContent = ref;
+    document.getElementById("payDepositAmt").textContent = fmt(deposit);
+    document.getElementById("payRef").textContent = ref;
+
+    var dl = document.getElementById("confirmDl");
+    dl.innerHTML =
+      "<dt>Name</dt><dd>" + name + "</dd>" +
+      "<dt>Format</dt><dd>" + info.label + "</dd>" +
+      "<dt>When</dt><dd>" + whenStr + "</dd>" +
+      "<dt>Total</dt><dd>" + fmt(info.total) + "</dd>" +
+      (notes ? "<dt>Notes</dt><dd>" + notes + "</dd>" : "");
+
+    var bodyLines = [
+      "New session request — ref " + ref,
+      "",
+      "Name: " + name,
+      "Phone: " + (phone || "-"),
+      "Email: " + (email || "-"),
+      "Format: " + info.label,
+      "Requested date/time: " + whenStr,
+      "Total: " + fmt(info.total) + " (deposit " + fmt(deposit) + ")",
+      notes ? "Notes: " + notes : ""
+    ].filter(Boolean).join("\n");
+
+    var mailHref = "mailto:" + NOTIFY_EMAIL + "?subject=" + encodeURIComponent("New session request " + ref) + "&body=" + encodeURIComponent(bodyLines);
+    var mailBtn = document.getElementById("emailReqBtn");
+    mailBtn.href = mailHref;
+
+    confirmCard.classList.add("show");
+    confirmCard.scrollIntoView({behavior:"smooth", block:"nearest"});
+
+    // Send the request straight to Kru Jeab's booking sheet + email
+    // notification. No redirect needed — this happens quietly in the
+    // background while the confirmation card is already showing.
+    var statusEl = document.getElementById("submitStatus");
+    var isoDate = state.date.getFullYear() + "-" + String(state.date.getMonth()+1).padStart(2,"0") + "-" + String(state.date.getDate()).padStart(2,"0");
+    var payload = new URLSearchParams({
+      name: name,
+      email: email,
+      phone: phone,
+      sessionType: state.type,
+      groupSize: state.type === "group" ? String(state.groupSize) : "1",
+      duration: String(state.duration),
+      date: isoDate,
+      time: state.time,
+      notes: notes,
+      price: String(info.total)
+    });
+
+    fetch(BOOKING_WEBHOOK_URL, { method: "POST", body: payload })
+      .then(function(res){ return res.ok ? res.json() : Promise.reject(new Error("bad status")); })
+      .then(function(){
+        statusEl.textContent = "Request sent — Kru Jeab has been notified and will confirm your slot shortly.";
+      })
+      .catch(function(){
+        statusEl.textContent = "Couldn't reach the booking system — please use the button below to email your request directly instead.";
+      });
+  });
+
+  // ---- contact form ----
+  document.getElementById("contactForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var name = document.getElementById("cName").value.trim();
+    var email = document.getElementById("cEmail").value.trim();
+    var msg = document.getElementById("cMsg").value.trim();
+    var body = "From: " + name + " (" + email + ")\n\n" + msg;
+    window.open("mailto:" + NOTIFY_EMAIL + "?subject=" + encodeURIComponent("Question via booking page") + "&body=" + encodeURIComponent(body), "_blank");
+  });
+
+  // ---- account: sign in / sign up (front-end convenience only) ----
+  (function(){
+    var STORAGE_KEY = "kj_account_v1";
+    var accountTabs = document.querySelectorAll(".account-tabs button");
+    var oauthNote = document.getElementById("oauthNote");
+    var signedInView = document.getElementById("signedInView");
+    var signedInLabel = document.getElementById("signedInLabel");
+    var accountForms = document.getElementById("accountForms");
+    var acctContinueBtn = document.getElementById("acctContinueBtn");
+
+    accountTabs.forEach(function(btn){
+      btn.addEventListener("click", function(){
+        accountTabs.forEach(function(b){ b.setAttribute("aria-pressed","false"); });
+        btn.setAttribute("aria-pressed","true");
+        acctContinueBtn.textContent = btn.getAttribute("data-mode") === "signup" ? "Create account with email" : "Continue with email";
+        oauthNote.classList.remove("show");
+      });
+    });
+
+    document.querySelectorAll(".oauth-btn").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var provider = btn.getAttribute("data-provider");
+        oauthNote.textContent = provider + " sign-in isn't connected yet on this page — pop your name and email in below instead.";
+        oauthNote.classList.add("show");
+      });
+    });
+
+    function readAccount(){
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"); } catch(e){ return null; }
+    }
+    function writeAccount(acct){
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(acct)); } catch(e){ /* ignore */ }
+    }
+    function clearAccount(){
+      try { localStorage.removeItem(STORAGE_KEY); } catch(e){ /* ignore */ }
+    }
+
+    function applySignedIn(acct){
+      if (!acct) {
+        signedInView.classList.remove("show");
+        accountForms.classList.remove("hide");
+        return;
+      }
+      signedInView.classList.add("show");
+      accountForms.classList.add("hide");
+      signedInLabel.textContent = acct.name + " · " + acct.email;
+      var fName = document.getElementById("fName");
+      var fEmail = document.getElementById("fEmail");
+      if (fName && !fName.value) fName.value = acct.name;
+      if (fEmail && !fEmail.value) fEmail.value = acct.email;
+    }
+
+    acctContinueBtn.addEventListener("click", function(){
+      var name = document.getElementById("acctName").value.trim();
+      var email = document.getElementById("acctEmail").value.trim();
+      if (!name || !email){
+        alert("Add your name and email to continue.");
+        return;
+      }
+      var acct = { name: name, email: email };
+      writeAccount(acct);
+      applySignedIn(acct);
+    });
+
+    document.getElementById("signOutBtn").addEventListener("click", function(){
+      clearAccount();
+      applySignedIn(null);
+    });
+
+    applySignedIn(readAccount());
+  })();
+
+  renderCalendar();
+  renderTimeSlots();
+  renumberSteps();
+  updateSummary();
+  fetchBookedSlots();
+})();
+</script>
+
+</body>
+</html>
