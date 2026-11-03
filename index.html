@@ -269,34 +269,6 @@
   .confirm-card .pay-box .ph{color:var(--gold);}
   .confirm-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
 
-  /* ---------- ACCOUNT / SIGN IN ---------- */
-  .account-shell{max-width:480px;}
-  .account-tabs{display:flex; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:3px; overflow:hidden; margin-bottom:24px;}
-  .account-tabs button{
-    flex:1; background:var(--surface-2); border:none; padding:12px; cursor:pointer;
-    font-family:var(--font-mono); font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft);
-  }
-  .account-tabs button[aria-pressed="true"]{background:var(--oxblood); color:var(--on-accent);}
-  .oauth-row{display:grid; gap:10px; margin-bottom:20px;}
-  .oauth-btn{
-    width:100%; justify-content:center; background:var(--surface-2); border:1px solid var(--line); color:var(--ink);
-  }
-  .oauth-btn:hover{border-color:var(--oxblood); color:var(--oxblood);}
-  .oauth-note{
-    display:none; font-size:0.78rem; color:var(--ink-soft); background:var(--ground);
-    border:1px dashed var(--line); border-radius:3px; padding:10px 12px; margin:-4px 0 16px;
-  }
-  .oauth-note.show{display:block;}
-  .divider{display:flex; align-items:center; gap:12px; margin:4px 0 18px; color:var(--ink-soft); font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em;}
-  .divider::before, .divider::after{content:""; flex:1; height:1px; background:var(--line);}
-  .account-signedin{display:none; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
-  .account-signedin.show{display:flex;}
-  .account-signedin .who{font-size:0.92rem;}
-  .account-signedin .who b{display:block; font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; color:var(--ink-soft); letter-spacing:0.05em; margin-bottom:2px; font-weight:600;}
-  .account-forms.hide{display:none;}
-  .nav-account{font-family:var(--font-mono); font-size:0.72rem; color:var(--ink-soft); letter-spacing:0.04em;}
-  .nav-account a{color:var(--accent);}
-
   /* ---------- CONTACT ---------- */
   .contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:40px;}
   .contact-card{background:var(--surface); border:1px solid var(--line); border-radius:4px; padding:24px;}
@@ -349,7 +321,6 @@
       <li><a href="#bio">Bio</a></li>
       <li><a href="#train">Training</a></li>
       <li><a href="#book">Book</a></li>
-      <li><a href="#account">Sign in</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <a class="btn cta" href="#book">Book a session</a>
@@ -522,43 +493,6 @@
   </div>
 </section>
 
-<section id="account">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow">Your account</span>
-      <h2>Sign in or sign up</h2>
-      <p style="color:var(--ink-soft); margin-top:10px;">Save your details once so booking a session next time only takes a click.</p>
-    </div>
-
-    <div class="account-shell panel">
-      <div class="account-signedin" id="signedInView">
-        <div class="who"><b>Signed in</b><span id="signedInLabel"></span></div>
-        <button class="btn btn-ghost" id="signOutBtn" type="button">Sign out</button>
-      </div>
-
-      <div class="account-forms" id="accountForms">
-        <div class="account-tabs">
-          <button type="button" data-mode="signin" aria-pressed="true">Sign in</button>
-          <button type="button" data-mode="signup" aria-pressed="false">Sign up</button>
-        </div>
-
-        <div class="oauth-row">
-          <button class="btn oauth-btn" type="button" data-provider="Google">Continue with Google</button>
-          <button class="btn oauth-btn" type="button" data-provider="Facebook">Continue with Facebook</button>
-        </div>
-        <p class="oauth-note" id="oauthNote"></p>
-
-        <div class="divider">or with email</div>
-
-        <div class="field"><label for="acctName">Name</label><input id="acctName" type="text" autocomplete="name" placeholder="Full name"></div>
-        <div class="field"><label for="acctEmail">Email</label><input id="acctEmail" type="email" autocomplete="email" placeholder="you@email.com"></div>
-        <button class="btn btn-primary" id="acctContinueBtn" type="button" style="width:100%; justify-content:center;">Continue with email</button>
-        <p class="price-note" style="margin-bottom:0;">No password needed — this just pre-fills your name and email when you book, on this device.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section id="contact">
   <div class="wrap">
     <div class="section-head">
@@ -578,7 +512,7 @@
         </form>
       </div>
       <aside class="contact-card gym-card" aria-label="The Ring Gym details">
-        <a href="https://www.theringgym.com.au/" target="_blank" rel="noopener"><img class="gym-logo" src="https://images.squarespace-cdn.com/content/v1/6052b58442552e07acb23fe4/1616055996274-VWBXF6XRFAX9X7W857YX/The+Ring+Gym+logo.png?format=1500w" alt="The Ring Gym Muay Thai logo" width="450" height="120" loading="lazy"></a>
+        <a href="https://www.theringgym.com.au/" target="_blank" rel="noopener"><img class="gym-logo" src="data:image/png;base64,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" alt="The Ring Gym Muay Thai logo" width="450" height="120"></a>
         <h3>The Ring Gym</h3>
         <ul class="contact-list">
           <li><span>Address</span><span>83 Cranwell Street, Braybrook VIC 3019</span></li>
@@ -596,7 +530,7 @@
 <footer>
   <div class="wrap">
     <p>Kru Jeab Samart Payakaroon — Muay Thai Coaching</p>
-    <p class="disclaimer">Independent booking page for Kru Jeab's private &amp; group sessions — not the official site of The Ring Gym. Some contact/payment details are placeholders and should be replaced with real ones before sharing.</p>
+    <p class="disclaimer">Independent booking page for Kru Jeab's private &amp; group sessions — not the official site of The Ring Gym.</p>
   </div>
 </footer>
 
@@ -1002,78 +936,6 @@
         btn.textContent = "Send message";
       });
   });
-
-  // ---- account: sign in / sign up (front-end convenience only) ----
-  (function(){
-    var STORAGE_KEY = "kj_account_v1";
-    var accountTabs = document.querySelectorAll(".account-tabs button");
-    var oauthNote = document.getElementById("oauthNote");
-    var signedInView = document.getElementById("signedInView");
-    var signedInLabel = document.getElementById("signedInLabel");
-    var accountForms = document.getElementById("accountForms");
-    var acctContinueBtn = document.getElementById("acctContinueBtn");
-
-    accountTabs.forEach(function(btn){
-      btn.addEventListener("click", function(){
-        accountTabs.forEach(function(b){ b.setAttribute("aria-pressed","false"); });
-        btn.setAttribute("aria-pressed","true");
-        acctContinueBtn.textContent = btn.getAttribute("data-mode") === "signup" ? "Create account with email" : "Continue with email";
-        oauthNote.classList.remove("show");
-      });
-    });
-
-    document.querySelectorAll(".oauth-btn").forEach(function(btn){
-      btn.addEventListener("click", function(){
-        var provider = btn.getAttribute("data-provider");
-        oauthNote.textContent = provider + " sign-in isn't connected yet on this page — pop your name and email in below instead.";
-        oauthNote.classList.add("show");
-      });
-    });
-
-    function readAccount(){
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"); } catch(e){ return null; }
-    }
-    function writeAccount(acct){
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(acct)); } catch(e){ /* ignore */ }
-    }
-    function clearAccount(){
-      try { localStorage.removeItem(STORAGE_KEY); } catch(e){ /* ignore */ }
-    }
-
-    function applySignedIn(acct){
-      if (!acct) {
-        signedInView.classList.remove("show");
-        accountForms.classList.remove("hide");
-        return;
-      }
-      signedInView.classList.add("show");
-      accountForms.classList.add("hide");
-      signedInLabel.textContent = acct.name + " · " + acct.email;
-      var fName = document.getElementById("fName");
-      var fEmail = document.getElementById("fEmail");
-      if (fName && !fName.value) fName.value = acct.name;
-      if (fEmail && !fEmail.value) fEmail.value = acct.email;
-    }
-
-    acctContinueBtn.addEventListener("click", function(){
-      var name = document.getElementById("acctName").value.trim();
-      var email = document.getElementById("acctEmail").value.trim();
-      if (!name || !email){
-        alert("Add your name and email to continue.");
-        return;
-      }
-      var acct = { name: name, email: email };
-      writeAccount(acct);
-      applySignedIn(acct);
-    });
-
-    document.getElementById("signOutBtn").addEventListener("click", function(){
-      clearAccount();
-      applySignedIn(null);
-    });
-
-    applySignedIn(readAccount());
-  })();
 
   renderCalendar();
   renderTimeSlots();
