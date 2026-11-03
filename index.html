@@ -269,6 +269,23 @@
   .confirm-card .pay-box .ph{color:var(--gold);}
   .confirm-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
 
+  /* ---------- GALLERY ---------- */
+  .gallery-grid{columns:3 240px; column-gap:16px;}
+  .gallery-item{break-inside:avoid; margin:0 0 16px; background:var(--surface); border:1px solid var(--line); border-radius:4px; overflow:hidden;}
+  .gallery-open{display:block; width:100%; padding:0; border:0; background:none; cursor:zoom-in; line-height:0;}
+  .gallery-open img{display:block; width:100%; height:auto; transition:opacity .15s;}
+  .gallery-open:hover img{opacity:0.88;}
+  .gallery-open:focus-visible{outline:2px solid var(--accent); outline-offset:-2px;}
+  .gallery-item figcaption{padding:10px 12px; font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft);}
+  .gallery-credit{display:block; margin-top:3px; text-transform:none; letter-spacing:0; font-size:0.72rem; opacity:0.85;}
+  .gallery-credit a{color:var(--accent); text-decoration:underline; text-underline-offset:2px;}
+  .lightbox{position:fixed; inset:0; z-index:110; display:none; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:24px; background:rgba(0,0,0,0.88);}
+  .lightbox.show{display:flex;}
+  .lightbox img{max-width:min(92vw,900px); max-height:80vh; width:auto; height:auto; border-radius:3px;}
+  .lightbox p{margin:0; color:var(--ink-soft); font-family:var(--font-mono); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em; text-align:center;}
+  .lightbox-close{position:absolute; top:14px; right:18px; width:44px; height:44px; border:1px solid var(--line); border-radius:50%; background:var(--surface); color:var(--ink); font-size:1.6rem; line-height:1; cursor:pointer;}
+  .lightbox-close:hover{border-color:var(--oxblood); color:var(--oxblood);}
+
   /* ---------- CONTACT ---------- */
   .contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:40px;}
   .contact-card{background:var(--surface); border:1px solid var(--line); border-radius:4px; padding:24px;}
@@ -297,6 +314,8 @@
   footer .disclaimer{max-width:60ch; margin-inline:auto; color:var(--ink-soft); opacity:0.8;}
 
   @media (max-width: 780px){
+    .gallery-grid{columns:2; column-gap:10px;}
+    .gallery-item{margin-bottom:10px;}
     .bio-grid, .book-shell, .contact-grid{grid-template-columns:1fr;}
     .price-panel{position:static;}
     .field-row{grid-template-columns:1fr;}
@@ -319,6 +338,7 @@
     <div class="mark">KRU JEAB SAMART <span>PAYAKAROON</span></div>
     <ul>
       <li><a href="#bio">Bio</a></li>
+      <li><a href="#gallery">Gallery</a></li>
       <li><a href="#train">Training</a></li>
       <li><a href="#book">Book</a></li>
       <li><a href="#contact">Contact</a></li>
@@ -383,10 +403,49 @@
           <a href="https://www.theringgym.com.au/our-team" target="_blank" rel="noopener">Full bio at The Ring Gym ↗</a>
         </div>
         <figure class="bio-photo">
+          <img src="images/gallery-backstage.jpg" alt="Kru Jeab Samart Payakaroon with Andrew &quot;Hollywood&quot; Colgrave, founder of The Ring Gym, backstage." width="604" height="452" loading="lazy">
+          <figcaption>Kru Jeab with Andrew &ldquo;Hollywood&rdquo; Colgrave &mdash; his lifelong friend, his student, and the founder of The Ring Gym.</figcaption>
+        </figure>
+        <figure class="bio-photo">
           <img src="images/corner-coaching.png" alt="Kru Jeab giving a fighter instructions in the corner between rounds.">
           <figcaption>Kru Jeab in the corner between rounds. Photo: <a href="https://resiliencemt.com.au/boxing-muay-thai/" target="_blank" rel="noopener">resiliencemt.com.au</a></figcaption>
         </figure>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Gallery</span>
+      <h2>In the ring &amp; out of it</h2>
+    </div>
+    <div class="gallery-grid">
+      <figure class="gallery-item">
+        <button type="button" class="gallery-open" data-full="images/gallery-fight.jpg" data-caption="Fight night" aria-label="Enlarge photo: Fight night"><img src="images/gallery-fight.jpg" alt="Fight night" width="1120" height="746" loading="lazy"></button>
+        <figcaption>Fight night<span class="gallery-credit">Photo: <a href="https://williamluu.com.au" target="_blank" rel="noopener">W.L Fight Photography</a></span></figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <button type="button" class="gallery-open" data-full="images/gallery-stance.jpg" data-caption="Muay Thai stance" aria-label="Enlarge photo: Muay Thai stance"><img src="images/gallery-stance.jpg" alt="Muay Thai stance" width="927" height="1400" loading="lazy"></button>
+        <figcaption>Muay Thai stance</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <button type="button" class="gallery-open" data-full="images/gallery-academy.jpg" data-caption="Muay Thai Academy" aria-label="Enlarge photo: Muay Thai Academy"><img src="images/gallery-academy.jpg" alt="Muay Thai Academy" width="966" height="1294" loading="lazy"></button>
+        <figcaption>Muay Thai Academy</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <button type="button" class="gallery-open" data-full="images/gallery-team.jpg" data-caption="Team photo" aria-label="Enlarge photo: Team photo"><img src="images/gallery-team.jpg" alt="Team photo" width="882" height="1556" loading="lazy"></button>
+        <figcaption>Team photo</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <button type="button" class="gallery-open" data-full="images/gallery-temple.jpg" data-caption="The tradition" aria-label="Enlarge photo: The tradition"><img src="images/gallery-temple.jpg" alt="The tradition" width="1056" height="1400" loading="lazy"></button>
+        <figcaption>The tradition</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <button type="button" class="gallery-open" data-full="images/gallery-golden-hour.jpg" data-caption="Brothers of the Golden Hour" aria-label="Enlarge photo: Brothers of the Golden Hour"><img src="images/gallery-golden-hour.jpg" alt="Brothers of the Golden Hour" width="933" height="1400" loading="lazy"></button>
+        <figcaption>Brothers of the Golden Hour</figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -533,6 +592,12 @@
     <p class="disclaimer">Independent booking page for Kru Jeab's private &amp; group sessions — not the official site of The Ring Gym.</p>
   </div>
 </footer>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close photo">&times;</button>
+  <img id="lightboxImg" alt="">
+  <p id="lightboxCap"></p>
+</div>
 
 <div class="modal" id="resultModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal-card">
@@ -936,6 +1001,36 @@
         btn.textContent = "Send message";
       });
   });
+
+  // ---- gallery lightbox ----
+  (function(){
+    var box = document.getElementById("lightbox");
+    var img = document.getElementById("lightboxImg");
+    var cap = document.getElementById("lightboxCap");
+    var closeBtn = document.getElementById("lightboxClose");
+    var opener = null;
+    function open(btn){
+      opener = btn;
+      img.src = btn.getAttribute("data-full");
+      img.alt = btn.getAttribute("data-caption") || "";
+      cap.textContent = btn.getAttribute("data-caption") || "";
+      box.classList.add("show");
+      closeBtn.focus();
+    }
+    function close(){
+      box.classList.remove("show");
+      img.removeAttribute("src");
+      if (opener && opener.focus) opener.focus();
+    }
+    document.querySelectorAll(".gallery-open").forEach(function(b){
+      b.addEventListener("click", function(){ open(b); });
+    });
+    closeBtn.addEventListener("click", close);
+    box.addEventListener("click", function(e){ if (e.target === box) close(); });
+    document.addEventListener("keydown", function(e){
+      if (e.key === "Escape" && box.classList.contains("show")) close();
+    });
+  })();
 
   renderCalendar();
   renderTimeSlots();
