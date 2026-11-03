@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Cancel booking - Kru Jeab</title>
+<style>
+  body{margin:0; background:#0B0908; color:#F7F3EC; font-family:Georgia,"Times New Roman",serif; line-height:1.6;}
+  .wrap{max-width:480px; margin:0 auto; padding:56px 20px;}
+  .brand{font-family:"Arial Narrow",Arial,sans-serif; font-weight:800; letter-spacing:0.02em; text-transform:uppercase; font-size:1.1rem; margin-bottom:28px;}
+  .brand span{color:#FF6D2E;}
+  .card{background:#1C1817; border:1px solid #332B26; border-top:6px solid #FF6D2E; border-radius:6px; padding:30px 26px;}
+  .card.ok{border-top-color:#1f9d55; text-align:center;}
+  .card.bad{border-top-color:#c62828; text-align:center;}
+  h1{margin:0 0 12px; font-family:"Arial Narrow",Arial,sans-serif; text-transform:uppercase; font-size:1.7rem;}
+  .ok h1{color:#3ddc84;}
+  .bad h1{color:#ff6b6b;}
+  p{margin:0 0 12px; color:#B7ADA2; white-space:pre-line; font-size:1.05rem;}
+  .when{color:#F7F3EC; font-weight:bold;}
+  label{display:block; margin:18px 0 6px; font-size:0.95rem; color:#F7F3EC;}
+  textarea{width:100%; box-sizing:border-box; min-height:110px; background:#0B0908; color:#F7F3EC; border:1px solid #4a3f38; border-radius:4px; padding:10px; font:1rem Georgia,serif; resize:vertical;}
+  .row{display:flex; gap:12px; margin-top:18px; flex-wrap:wrap;}
+  button{font:600 0.85rem "Courier New",monospace; letter-spacing:0.06em; text-transform:uppercase; border:0; border-radius:2px; padding:13px 22px; cursor:pointer;}
+  .go{background:#c62828; color:#fff;}
+  .keep{background:#332B26; color:#F7F3EC; text-decoration:none; display:inline-block; font:600 0.85rem "Courier New",monospace; letter-spacing:0.06em; text-transform:uppercase; padding:13px 22px; border-radius:2px;}
+  button[disabled]{opacity:.6; cursor:default;}
+  a{color:#FF8A52;}
+  .foot{margin-top:22px; text-align:center; font-size:0.85rem;}
+  .hint{font-size:0.85rem; color:#8b8176;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">Kru Jeab Samart <span>Payakaroon</span></div>
+  <div class="card" id="card">
+    <h1 id="title">Loading&hellip;</h1>
+    <p id="msg">Checking your booking.</p>
+    <div id="form" hidden>
+      <p class="when" id="details"></p>
+      <label for="reason" id="reasonLabel">Message (optional)</label>
+      <textarea id="reason" maxlength="500"></textarea>
+      <p class="hint" id="hint"></p>
+      <div class="row">
+        <button type="button" class="go" id="go">Cancel this booking</button>
+        <a class="keep" href="./">Keep it</a>
+      </div>
+    </div>
+  </div>
+  <p class="foot"><a href="./">Back to the booking page</a></p>
+</div>
+<script>
+(function(){
+  var EXEC_URL = "https://script.google.com/macros/s/AKfycbxtswxxfErav2Mc1BKmQQQQAyvYzgm8io90H8OjKE5zpGtYtY1GcwYOvIJ281iWtsC2/exec";
+  var q = new URLSearchParams(location.search);
+  var who = q.get("who") === "client" ? "client" : "coach";
+  var id = q.get("id"), t = q.get("t");
+  var card = document.getElementById("card");
+  var title = document.getElementById("title");
+  var msg = document.getElementById("msg");
+  var form = document.getElementById("form");
+  var go = document.getElementById("go");
+
+  function show(kind, ttl, text){
+    card.className = "card " + kind;
+    title.textContent = ttl;
+    msg.textContent = text;
+    msg.hidden = !text;
+    form.hidden = true;
+  }
+
+  function base(){ return EXEC_URL + "?who=" + who + "&id=" + encodeURIComponent(id) + "&t=" + encodeURIComponent(t); }
+
+  function load(){
+    if (!id || !t){ show("bad", "Link not valid", "This cancel link is incomplete. Please use the link in your email."); return; }
+    fetch(base() + "&action=cancel_info")
+      .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
+      .then(function(d){
+        if (!d.ok){ show("bad", "Link not valid", d.message || "This cancel link is not valid or has expired."); return; }
+        var st = String(d.status || "").toLowerCase();
+        if (st === "cancelled"){ show("ok", "Already cancelled", d.name + " - " + d.when); return; }
+        if (st !== "pending" && st !== "confirmed"){ show("bad", "Nothing to cancel", "This request is marked " + d.status + "."); return; }
+        card.className = "card";
+        title.textContent = "Cancel this booking?";
+        msg.hidden = true;
+        document.getElementById("details").textContent = d.name + "\n" + d.when;
+        if (who === "coach"){
+          document.getElementById("reasonLabel").textContent = "Message to the client (they will receive this by email)";
+          document.getElementById("hint").textContent = "The client is emailed, the calendar event is removed and the time opens up again on the website.";
+        } else {
+          document.getElementById("reasonLabel").textContent = "Message for Kru Jeab (optional)";
+          document.getElementById("hint").textContent = "Kru Jeab is emailed and the time opens up again for others.";
+        }
+        form.hidden = false;
+      })
+      .catch(function(){ show("bad", "Couldn't reach the booking system", "Nothing was changed. Please check your connection and reload this page."); });
+  }
+
+  go.addEventListener("click", function(){
+    go.disabled = true;
+    go.textContent = "Cancelling…";
+    var reason = document.getElementById("reason").value.trim();
+    fetch(base() + "&action=cancel&format=json&reason=" + encodeURIComponent(reason))
+      .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
+      .then(function(d){ show(d.ok ? "ok" : "bad", d.title || "Done", d.message || ""); })
+      .catch(function(){
+        go.disabled = false; go.textContent = "Cancel this booking";
+        document.getElementById("hint").textContent = "Couldn't reach the booking system. Nothing may have changed - please try again.";
+      });
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>
