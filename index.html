@@ -486,7 +486,7 @@
         <div class="step-label"><b>01</b> Session type</div>
         <div class="chip-row" id="typeChips">
           <button class="chip" type="button" data-type="private" aria-pressed="true">Private (1-on-1)</button>
-          <button class="chip" type="button" data-type="group" aria-pressed="false">Group (2+)</button>
+          <button class="chip" type="button" data-type="group" aria-pressed="false">Group (2–4)</button>
         </div>
 
         <div id="groupStepWrap" style="display:none;">
@@ -496,12 +496,11 @@
             <span class="count" id="grpCount">2 people</span>
             <button type="button" id="grpPlus" aria-label="Increase group size">+</button>
           </div>
+          <p class="price-note">Groups of 5 or more: please <a href="#contact" style="color:var(--accent); text-decoration:underline; text-underline-offset:2px;">get in touch</a>.</p>
         </div>
 
         <div class="step-label"><b id="durStepNum">02</b> Duration</div>
         <div class="chip-row" id="durChips">
-          <button class="chip" type="button" data-dur="30" aria-pressed="false">30 min</button>
-          <button class="chip" type="button" data-dur="45" aria-pressed="false">45 min</button>
           <button class="chip" type="button" data-dur="60" aria-pressed="true">60 min</button>
         </div>
 
@@ -535,7 +534,7 @@
           <div class="price-line"><span>Date &amp; time</span><span class="v" id="sumWhen">Not selected</span></div>
           <div class="price-line"><span>Rate</span><span class="v" id="sumRate">—</span></div>
           <div class="price-line total"><span>Total</span><span class="v" id="sumTotal">—</span></div>
-          <p class="price-note">Group rate is charged per person. Kru Jeab will confirm your session by email.</p>
+          <p class="price-note">$100 per hour for a private session, plus $20 for each additional person (up to 4). Kru Jeab will confirm your session by email.</p>
           <button class="btn btn-primary" id="requestBtn" type="button" style="width:100%; justify-content:center;" disabled>Request this session</button>
 
         </div>
@@ -606,11 +605,10 @@
 
   var BOOKING_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxtswxxfErav2Mc1BKmQQQQAyvYzgm8io90H8OjKE5zpGtYtY1GcwYOvIJ281iWtsC2/exec";
 
-  var RATES = {
-    30: { private: 70,  group: {2:50, 3:42, 4:38, 5:35, 6:32} },
-    45: { private: 95,  group: {2:68, 3:55, 4:48, 5:44, 6:40} },
-    60: { private: 120, group: {2:85, 3:70, 4:60, 5:54, 6:48} }
-  };
+  // $100 for a 60 min private session; each additional person is +$20 (groups capped at 4).
+  var BASE_RATE = 100;
+  var EXTRA_PERSON = 20;
+  var MAX_GROUP = 4;
 
   // Start times every 30 minutes from 6:00am. A start time is only offered when the
   // whole session (for the chosen duration) fits: it must finish by 6:00pm and must not
@@ -691,14 +689,11 @@
   }
 
   function priceInfo(){
-    var r = RATES[state.duration];
     if (state.type === "private"){
-      return { perPerson: r.private, total: r.private, label: "Private, " + state.duration + " min" };
+      return { total: BASE_RATE, rateText: fmt(BASE_RATE), label: "Private, " + state.duration + " min" };
     }
-    var size = state.groupSize;
-    var tier = size <= 6 ? size : 6;
-    var pp = r.group[tier];
-    return { perPerson: pp, total: pp * size, label: "Group ×" + size + ", " + state.duration + " min" };
+    var size = Math.min(Math.max(state.groupSize, 2), MAX_GROUP);
+    return { total: BASE_RATE + EXTRA_PERSON * (size - 1), rateText: fmt(BASE_RATE) + " + " + fmt(EXTRA_PERSON) + " / extra person", label: "Group \u00d7" + size + ", " + state.duration + " min" };
   }
 
   function renderChips(container, selector, cb){
@@ -721,15 +716,21 @@
   });
 
   var grpCount = document.getElementById("grpCount");
-  document.getElementById("grpMinus").addEventListener("click", function(){
+  var grpPlus = document.getElementById("grpPlus");
+  var grpMinus = document.getElementById("grpMinus");
+  function refreshGroupUI(){
+    grpCount.textContent = state.groupSize + " people";
+    grpMinus.disabled = state.groupSize <= 2;
+    grpPlus.disabled = state.groupSize >= MAX_GROUP;
+    updateSummary();
+  }
+  grpMinus.addEventListener("click", function(){
     state.groupSize = Math.max(2, state.groupSize - 1);
-    grpCount.textContent = state.groupSize + (state.groupSize >= 6 ? "+ people" : " people");
-    updateSummary();
+    refreshGroupUI();
   });
-  document.getElementById("grpPlus").addEventListener("click", function(){
-    state.groupSize = Math.min(10, state.groupSize + 1);
-    grpCount.textContent = state.groupSize + (state.groupSize >= 6 ? "+ people" : " people");
-    updateSummary();
+  grpPlus.addEventListener("click", function(){
+    state.groupSize = Math.min(MAX_GROUP, state.groupSize + 1);
+    refreshGroupUI();
   });
 
   var durChips = document.getElementById("durChips");
@@ -740,7 +741,7 @@
   });
 
   function renumberSteps(){
-    var n = 2;
+    var n = state.type === "group" ? 3 : 2;
     document.getElementById("durStepNum").textContent = String(n++).padStart(2,"0");
     document.getElementById("dateStepNum").textContent = String(n++).padStart(2,"0");
     document.getElementById("timeStepNum").textContent = String(n++).padStart(2,"0");
@@ -862,7 +863,7 @@
     } else {
       sumWhen.textContent = "Not selected";
     }
-    sumRate.textContent = state.type === "group" ? fmt(info.perPerson) + " / person" : fmt(info.perPerson);
+    sumRate.textContent = info.rateText;
     sumTotal.textContent = fmt(info.total);
 
     var ready = !!(state.date && state.time);
