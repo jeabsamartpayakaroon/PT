@@ -650,11 +650,13 @@
     }
   }
 
-  function buildDaySlots(duration){
+  function buildDaySlots(duration, day){
+    // Reserved class windows apply Mon-Fri only; Saturday is a free day.
+    var ranges = (day === 6) ? [] : BLOCKED_RANGES;
     var slots = [];
     for (var s = DAY_START_MIN; s + duration <= LAST_END_MIN; s += SLOT_STEP){
       var e = s + duration;
-      var blocked = BLOCKED_RANGES.some(function(b){ return s < b[1] && e > b[0]; });
+      var blocked = ranges.some(function(b){ return s < b[1] && e > b[0]; });
       if (!blocked) slots.push(formatMinutes(s));
     }
     return slots;
@@ -698,7 +700,7 @@
 
   function slotsForDate(d){
     if (d.getDay() === 0) return []; // Sunday closed
-    var slots = buildDaySlots(state.duration);
+    var slots = buildDaySlots(state.duration, d.getDay());
     var now = melbNow();
     if (isoDateStr(d) === isoDateStr(now.date)){
       slots = slots.filter(function(t){ return parseTimeLabel(t) > now.min; }); // drop times that have passed
